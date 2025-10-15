@@ -57,10 +57,7 @@ export const seedOrderItems = async (): Promise<void> => {
             const orderItemData: CreateOrderItemDto = {
               order_id: order.id_order,
               product_id: product.id_product,
-              amount: parseInt(row.amount),
-              price: parseFloat(row.price),
-              subtotal: parseFloat(row.subtotal),
-              is_active: true
+              quantity: row.quantity,
             };
 
             try {

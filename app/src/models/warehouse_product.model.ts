@@ -7,8 +7,7 @@ export interface WarehouseProductAttributes {
   warehouse_id: number;
   product_id: number;
   stock_quantity: number;
-  created_at?: Date;
-  updated_at?: Date;
+
 }
 
 type WarehouseProductCreationAttributes = Optional<
@@ -22,8 +21,6 @@ class WarehouseProduct
   public warehouse_id!: number;
   public product_id!: number;
   public stock_quantity!: number;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
 }
 
 WarehouseProduct.init(
@@ -51,24 +48,16 @@ WarehouseProduct.init(
       allowNull: false,
       defaultValue: 0,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     sequelize,
     tableName: "warehouse_products",
     modelName: "WarehouseProduct",
-    timestamps: false,
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "update_at",
   }
 );
-
-// Relaciones
 
 
 export default WarehouseProduct;

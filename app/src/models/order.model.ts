@@ -22,8 +22,8 @@ import sequelize from "../config/database";
 export interface OrderAttributes {
   id_order: number;
   customer_id: number;
-  seller_id: number;
   order_status_id: number;
+  warehouse_id: number;
   is_active: boolean;
 }
 
@@ -41,28 +41,10 @@ export interface OrderCreationAttributes extends Optional<OrderAttributes, "id_o
  * Implements the attributes defined in `OrderAttributes` and `OrderCreationAttributes`.
  */
 class Order extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
-  /** Unique Order identifier (primary key). */
   public id_order!: number;
-
-  /** Order customer. */
   public customer_id!: number;
-
-  /** Order seller. */
-  public seller_id!: number;
-
-  /** Order payment_method. */
-  public payment_method_id!: number;
-
-  /** Order status. */
   public order_status_id!: number;
-
-  /** Order payment date. */
-  public payment_date!: Date;
-
-  /** Order total. */
-  public total!: number; 
-
-  /** State in which the Order is located (active/inactive) */
+  public warehouse_id!: number;
   public is_active!: boolean;
 
 }
@@ -72,11 +54,8 @@ class Order extends Model<OrderAttributes, OrderCreationAttributes> implements O
  * 
  * - `id_order`: Auto-incrementing integer, primary key.
  * - `customer_id`: Foreign key referencing the `customers` table.
- * - `seller_id`: Foreign key referencing the `sellers` table.
- * - `payment_method_id`: Foreign key referencing the `payment_methods` table.
  * - `order_status_id`: Foreign key referencing the `order_status` table.
- * - `payment_date`: Date of the payment, defaults to the current date and time.
- * - `total`: Decimal value representing the total amount of the order.
+ * - `warehouse_id`: Foreign key referencing the `warehouses` table.
  * - `is_active`: Boolean to determine whether the Order is active or inactive.
  */
 Order.init(
@@ -94,15 +73,6 @@ Order.init(
         key: "id_customer",
       }
     },
-    seller_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "seller",
-        key: "id_seller",
-      }
-    },
-
      order_status_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -111,7 +81,14 @@ Order.init(
         key: "id_order_status",
         }
     },
-
+    warehouse_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references:{
+        model: "warehouses",
+        key: "id_warehouses",
+      }
+    },
     is_active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

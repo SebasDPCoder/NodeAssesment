@@ -16,7 +16,6 @@
 import { createCustomer } from "../dao/customer.dao";
 import { CreateCustomerDto } from "../dto/customer.dto";
 import Address from "../models/address.model";
-import Gender from "../models/gender.model";
 import fs from 'fs';
 import csv from 'csv-parser';
 import path from 'path';
@@ -29,10 +28,9 @@ import path from 'path';
  */
 export const seedCustomers = async (): Promise<void> => {
   const addresses = await Address.findAll();
-  const genders = await Gender.findAll();
 
-  if (addresses.length === 0 || genders.length === 0) {
-    console.log("❌ Addresses or Genders not found. Run those seeders first.");
+  if (addresses.length === 0) {
+    console.log("❌ Addresses not found. Run those seeders first.");
     return;
   }
 
@@ -49,18 +47,14 @@ export const seedCustomers = async (): Promise<void> => {
         let count = 0;
         try {
           for (const row of rows) {
-            const gender = genders.find(g => g.name === row.gender);
             const address = addresses[parseInt(row.address_index)];
             
-            if (!gender || !address) continue;
+            if (!address) continue;
 
             const customerData: CreateCustomerDto = {
               address_id: address.id_address,
-              gender_id: gender.id_gender,
-              fullname: row.fullname,
-              phone: row.phone,
+              full_name: row.fullname,
               email: row.email,
-              birth_date: new Date(row.birth_date),
               is_active: true
             };
 

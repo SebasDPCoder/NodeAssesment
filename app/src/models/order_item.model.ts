@@ -24,12 +24,9 @@ import sequelize from "../config/database";
  */
 export interface OrderItemAttributes {
     id_order_item: number;
-    order_id: number;
     product_id:number;
-    amount: number;
-    price: number;
-    subtotal: number;
-    is_active: boolean;
+    order_id: number;
+    quantity: number;
 }
 
 /**
@@ -41,30 +38,19 @@ export interface OrderItemAttributes {
 export interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id_order_item"> { }
 
 
-
-
 /**
  * Class that represents the `order_item` model in Sequelize.
  * 
  * Implements the attributes defined in `OrderItemAttributes` and `ProductsCreationAttributes`.
  */
-
 class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
-    /** Unique identifier of the OrderItem (primary key). */
     public id_order_item!: number;
-    /** Unique identifier of the category (Foreign key). */
     public order_id!: number;
-    /** Unique identifier of the product (Foreign key). */
     public product_id!: number;
-    /** Name of the amount */
-    public amount!: number;
-    /** Name of the order_item */
-    public price!: number;
-    /** Name of the order_item */
-    public subtotal!: number;
-    /** Status of the order_item (active/inactive) */
-    public is_active!: boolean;
+    public quantity!: number;
 }
+
+
 /**
 
  * 
@@ -72,10 +58,7 @@ class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> 
  * - `id_order_item`: Primary key, unique identifier for each order item.
  * - `order_id`: Foreign key linking to the related order.
  * - `product_id:  Foreign key linking to the related Product
- * - `amount: amount of the individual order item
- * - `price`: Price of the individual order item.
- * - `description`: Description or details of the order item.
- * - `subtotal`: Calculated subtotal (price * amount) for this order item.
+ * - `quantity: quantity of the order items
  * - `is_active`: Boolean flag to indicate if the order item is active or inactive.
  * 
  * This class serves as the blueprint for CRUD operations on order items within the database.
@@ -105,22 +88,9 @@ OrderItem.init(
                 key: "id_product",
             }
         },
-        amount: {
+        quantity: {
             type: DataTypes.INTEGER,
             allowNull: false
-        },
-        price: {
-            type: DataTypes.DECIMAL(12, 2),
-            allowNull: false,
-        },
-        subtotal: {
-            type: DataTypes.DECIMAL(12, 2),
-            allowNull: false,
-        },
-        is_active: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true,
         }
     },
     {

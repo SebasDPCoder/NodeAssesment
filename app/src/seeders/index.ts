@@ -11,16 +11,16 @@
 
 import { seedRoles } from "./role.seeder";
 
-import { seedOrderStatus } from "./04-orderStatus.seeder";
+import { seedOrderStatus } from "./order_status.seeder";
 
-import { seedAddresses } from "./06-address.seeder";
-import { seedAccesses } from "./07-access.seeder";
-import { seedProducts } from "./08-product.seeder";
-import { seedCustomers } from "./09-customer.seeder";
+import { seedAddresses } from "./address.seeder";
+import { seedAccesses } from "./access.seeder";
+import { seedProducts } from "./product.seeder";
+import { seedCustomers } from "./customer.seeder";
 import { seedUsers } from "./user.seeder";
-import { seedOrders } from "./11-orders.seeder";
-import { seedOrderItems } from "./12-order_item.seeder";
-import { seedOrderPayments } from "./13-order_payment.seeder";
+import { seedOrders } from "./orders.seeder";
+import { seedOrderItems } from "./order_item.seeder";
+
 
 /**
  * Run all seeders in correct order
@@ -41,7 +41,6 @@ export const runAllSeeders = async () => {
     await seedUsers(); // depends on access
     await seedOrders(); // depends on customers, payment methods, order statuses
     await seedOrderItems(); // depends on orders and products
-    await seedOrderPayments(); // depends on orders and payment methods
     
     console.log("✅ Database seeding completed successfully!");
   } catch (error) {
@@ -62,5 +61,4 @@ export {
   seedCustomers,
   seedOrders,
   seedOrderItems,
-  seedOrderPayments
 };

@@ -37,8 +37,7 @@ export const seedProducts = async (): Promise<void> => {
               code: row.code || `PRD-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
               name: `${row.name} ${Math.random().toString(36).substr(2, 4).toUpperCase()}`, // ensure uniqueness
               price: parseFloat(row.price) || 0,
-              description: row.description || `Descripción de ${row.name}`,
-              is_deleted: false,
+              is_active: false,
             };
 
             try {

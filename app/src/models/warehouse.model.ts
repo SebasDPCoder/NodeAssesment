@@ -6,8 +6,6 @@ export interface WarehouseAttributes {
   name: string;
   location: string;
   is_active: boolean;
-  created_at?: Date;
-  updated_at?: Date;
 }
 
 type WarehouseCreationAttributes = Optional<WarehouseAttributes, "id_warehouse">;
@@ -18,8 +16,6 @@ class Warehouse extends Model<WarehouseAttributes, WarehouseCreationAttributes>
   public name!: string;
   public location!: string;
   public is_active!: boolean;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
 }
 
 Warehouse.init(
@@ -42,20 +38,14 @@ Warehouse.init(
       allowNull: false,
       defaultValue: true,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     sequelize,
     tableName: "warehouses",
     modelName: "Warehouse",
-    timestamps: false,
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "update_at",
   }
 );
 

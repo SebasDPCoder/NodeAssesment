@@ -22,7 +22,6 @@ import sequelize from "../config/database";
 export interface OrderStatusAttributes {
     id_order_status : number;
     name : string;
-    is_active : boolean;
 }
 
 /**
@@ -41,14 +40,13 @@ export interface OrderStatusCreationAttributes extends Optional<OrderStatusAttri
 class OrderStatus extends Model<OrderStatusAttributes, OrderStatusCreationAttributes> implements OrderStatusAttributes { 
     public id_order_status!: number;
     public name!: string;
-    public is_active!: boolean;
 }
 
 /**
  * Initialization of the `Order Status` model with Sequelize configuration.
  * 
  * - `id_order_status`: Auto-increment integer, primary key.
- * - `name`: User for login.
+ * - `name`: status of order (delivered, in transit, pending).
  * - `is_active`: Boolean to determine whether the account is active or inactive.
  */
 OrderStatus.init(
@@ -63,11 +61,6 @@ OrderStatus.init(
             unique: true,
             allowNull: false,
         },
-        is_active: {
-            type:DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true,
-        }
     },
     {
         sequelize,
@@ -76,8 +69,6 @@ OrderStatus.init(
         timestamps : true, // Include createdAt and updatedAt
         createdAt : "created_at",
         updatedAt : "updated_at"
-
-
     }
 )
 

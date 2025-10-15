@@ -21,18 +21,15 @@ export interface ProductAttributes {
   id_product: number;
   code: string;
   name: string;
-  description: string;
   price: number;
-  is_deleted: boolean;
-  created_at?: Date;
-  updated_at?: Date;
+  is_active: boolean;
 }
 
 /**
  * Attributes used for creating a new Product.
  * The `id_product` is optional because it is auto-generated.
  */
-export type ProductCreationAttributes = Optional<ProductAttributes, "id_product" | "is_deleted" | "created_at" | "updated_at">;
+export type ProductCreationAttributes = Optional<ProductAttributes, "id_product">;
 
 /**
  * Class that represents the `Product` model in Sequelize.
@@ -41,12 +38,8 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes> implem
   public id_product!: number;
   public code!: string;
   public name!: string;
-  public description!: string;
   public price!: number;
-  public is_deleted!: boolean;
-
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  public is_active!: boolean;
 }
 
 /**
@@ -69,10 +62,6 @@ Product.init(
       allowNull: false,
       unique: true,
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
     price: {
       type: DataTypes.DECIMAL(12, 2),
       allowNull: false,
@@ -80,26 +69,19 @@ Product.init(
         min: 0,
       },
     },
-    is_deleted: {
+    is_active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false,
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+      defaultValue: true,
     },
   },
   {
     sequelize,
     modelName: "Product",
     tableName: "products",
-    timestamps: false, // ya manejamos manualmente created_at y updated_at
-  }
-);
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "update_at", 
+});
 
 export default Product;

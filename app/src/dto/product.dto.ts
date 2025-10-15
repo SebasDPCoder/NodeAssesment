@@ -33,12 +33,9 @@ export class CreateProductDto {
   @IsNumber()
   price!: number;
 
-  @IsString()
-  description!: string;
-
   @IsBoolean()
   @IsOptional()
-  is_deleted?: boolean;
+  is_active?: boolean;
 }
 
 /**

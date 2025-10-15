@@ -3,7 +3,7 @@ import sequelize from "../config/database";
 
 export interface UserAttributes {
     id_user: number,
-    document: string,
+    access_id: number,
     full_name: string,
     email: string,
     role_id: number,
@@ -14,7 +14,7 @@ type UserCreationAttributes = Optional<UserAttributes, "id_user">;
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes{
     id_user!: number;
-    document!: string;
+    access_id!: number;
     role_id!: number;
     full_name!: string;
     email!: string;
@@ -28,8 +28,8 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    document: {
-      type: DataTypes.STRING(20),
+    access_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     role_id: {
@@ -58,7 +58,9 @@ User.init(
     sequelize, 
     tableName: "users",
     modelName: "User",
-    timestamps: false, 
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "update_at", 
   }
 );
 

@@ -50,7 +50,7 @@ export const seedUsers = async (): Promise<void> => {
 
             const UserData: CreateUserDto = {
               access_id: access.id_access,
-              fullname: row.fullname,
+              full_name: row.fullname,
               email: row.email,
               is_active: true
             };
@@ -58,7 +58,7 @@ export const seedUsers = async (): Promise<void> => {
             try {
               await createUser(UserData);
               count++;
-              console.log(`✓ user created: ${row.fullname}`);
+              console.log(`✓ user created: ${row.full_name}`);
             } catch (error: any) {
               if (!error.message?.includes('unique constraint')) {
                 console.error(`Error creating user ${row.email}:`, error.message);
