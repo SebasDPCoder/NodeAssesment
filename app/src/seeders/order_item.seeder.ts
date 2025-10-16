@@ -14,7 +14,7 @@
  */
 
 import { createOrderItem } from "../dao/order_item.dao";
-import { CreateOrderItemDto } from "../dto/order_items.dto";
+import { CreateOrderItemDTO } from "../dto/order_item.dto";
 import Order from "../models/order.model";
 import Product from "../models/product.model";
 import fs from 'fs';
@@ -54,10 +54,11 @@ export const seedOrderItems = async (): Promise<void> => {
             
             if (!order || !product) continue;
 
-            const orderItemData: CreateOrderItemDto = {
+            const orderItemData: CreateOrderItemDTO = {
               order_id: order.id_order,
               product_id: product.id_product,
               quantity: row.quantity,
+              is_active: row.is_active === "true",
             };
 
             try {

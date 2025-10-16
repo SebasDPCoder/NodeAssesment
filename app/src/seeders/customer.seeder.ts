@@ -14,7 +14,7 @@
  */
 
 import { createCustomer } from "../dao/customer.dao";
-import { CreateCustomerDto } from "../dto/customer.dto";
+import { CreateCustomerDTO } from "../dto/customer.dto";
 import Address from "../models/address.model";
 import fs from 'fs';
 import csv from 'csv-parser';
@@ -51,7 +51,7 @@ export const seedCustomers = async (): Promise<void> => {
             
             if (!address) continue;
 
-            const customerData: CreateCustomerDto = {
+            const customerData: CreateCustomerDTO = {
               address_id: address.id_address,
               full_name: row.fullname,
               email: row.email,

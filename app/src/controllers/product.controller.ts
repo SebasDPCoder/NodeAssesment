@@ -20,7 +20,7 @@
 
 import { Request, Response } from "express";
 import * as productDao from "../dao/product.dao";
-import { CreateProductDto } from "../dto/product.dto";
+import { CreateProductDTO } from "../dto/product.dto";
 
 /**
  * Creates a new product in the system.
@@ -42,7 +42,7 @@ import { CreateProductDto } from "../dto/product.dto";
  */
 export const createProduct = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const dto: CreateProductDto = req.body;
+        const dto: CreateProductDTO = req.body;
         const product = await productDao.createProduct(dto);
         return res.status(201).json(product);
     } catch (err: any) {

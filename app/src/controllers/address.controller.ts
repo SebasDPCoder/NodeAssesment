@@ -7,7 +7,7 @@
 
 import { Request, Response } from "express";
 import * as addressDao from "../dao/address.dao";
-import { CreateAddressDto, UpdateAddressDto } from "../dto/address.dto";
+import { CreateAddressDTO, UpdateAddressDTO } from "../dto/address.dto";
 
 // --- CREATE ---
 
@@ -17,7 +17,7 @@ import { CreateAddressDto, UpdateAddressDto } from "../dto/address.dto";
  */
 export const createAddress = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const dto: CreateAddressDto = req.body;
+    const dto: CreateAddressDTO = req.body;
 
     if (!dto || Object.keys(dto).length === 0) {
       return res.status(400).json({ error: "Request body cannot be empty." });
@@ -94,7 +94,7 @@ export const updateAddress = async (req: Request, res: Response): Promise<Respon
       return res.status(400).json({ error: "Invalid address ID." });
     }
 
-    const data: UpdateAddressDto = req.body;
+    const data: UpdateAddressDTO = req.body;
 
 
     if (!data || Object.keys(data).length === 0) {

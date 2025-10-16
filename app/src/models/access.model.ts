@@ -21,6 +21,7 @@ export interface AccessAttributes {
     role_id: number;
     document: string;
     password: string;
+    is_active: boolean;
 }
 
 /**
@@ -73,6 +74,10 @@ Access.init(
         },
         password: {
             type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        is_active: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
         }
     },

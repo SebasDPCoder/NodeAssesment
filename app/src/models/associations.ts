@@ -89,7 +89,6 @@ export const applyAssociations = () => {
    * Warehouse ↔ Products (Many-to-Many through warehouse_products)
    */
   Warehouse.belongsToMany(Product, { through: WarehouseProduct, foreignKey: "warehouse_id", otherKey: "product_id", as: "products" });
-
   Product.belongsToMany(Warehouse, {through: WarehouseProduct, foreignKey: "product_id", otherKey: "warehouse_id", as: "warehouses"});
 };
 

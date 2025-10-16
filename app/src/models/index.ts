@@ -17,13 +17,16 @@ import sequelize from "../config/database";
 
 // Import models
 import Role from "./role.model";
+import Order from "./order.model";
+import OrderItem from "./order_item.model";
 import OrderStatus from "./order_status.model";
 import Customer from "./customer.model";
 import Access from "./access.model";
 import Address from "./address.model";
 import Product from "./product.model";
-import Order from "./order.model";
-import OrderItem from "./order_item.model";
+import User from "./user.model";
+import Warehouse from "./warehouse.model";
+import WarehouseProduct from "./warehouse_product.model";
 
 import {applyAssociations} from "./associations";
 /**
@@ -76,4 +79,7 @@ export {
   syncDB,
   Access,
   Address,
+  User,
+  Warehouse,
+  WarehouseProduct,
 };

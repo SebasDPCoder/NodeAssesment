@@ -14,7 +14,7 @@
  */
 
 import { createOrder } from "../dao/order.dao";
-import { CreateOrderDto } from "../dto/order.dto";
+import { CreateOrderDTO } from "../dto/order.dto";
 import Customer from "../models/customer.model";
 import OrderStatus from "../models/order_status.model";
 import Warehouse from "../models/warehouse.model";
@@ -33,7 +33,7 @@ export const seedOrders = async (): Promise<void> => {
   const orderStatuses = await OrderStatus.findAll();
   const warehouses = await Warehouse.findAll();
 
-  if (customers.length === 0 || orderStatuses.length === 0 || warehouse.length === 0) {
+  if (customers.length === 0 || orderStatuses.length === 0 || warehouses.length === 0) {
     console.log("❌ Required data not found. Run customer,warehouse and order status seeders first.");
     return;
   }
@@ -57,7 +57,7 @@ export const seedOrders = async (): Promise<void> => {
             
             if (!customer || !orderStatus || !warehouse) continue;
 
-            const orderData: CreateOrderDto = {
+            const orderData: CreateOrderDTO = {
               customer_id: customer.id_customer,
               order_status_id: orderStatus.id_order_status,
               warehouse_id: warehouse.id_warehouse,

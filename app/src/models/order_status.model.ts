@@ -22,6 +22,7 @@ import sequelize from "../config/database";
 export interface OrderStatusAttributes {
     id_order_status : number;
     name : string;
+    is_active : boolean;
 }
 
 /**
@@ -40,6 +41,7 @@ export interface OrderStatusCreationAttributes extends Optional<OrderStatusAttri
 class OrderStatus extends Model<OrderStatusAttributes, OrderStatusCreationAttributes> implements OrderStatusAttributes { 
     public id_order_status!: number;
     public name!: string;
+    public is_active!: boolean;
 }
 
 /**
@@ -61,6 +63,10 @@ OrderStatus.init(
             unique: true,
             allowNull: false,
         },
+        is_active:{
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        }
     },
     {
         sequelize,

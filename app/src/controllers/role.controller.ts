@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as roleDao from "../dao/role.dao";
-// --- READ (GET) ---
 
 /**
  * Get role actives and inactives

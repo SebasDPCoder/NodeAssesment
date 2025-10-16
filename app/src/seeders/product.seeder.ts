@@ -8,7 +8,7 @@
  */
 
 import { createProduct } from "../dao/product.dao";
-import { CreateProductDto } from "../dto/product.dto";
+import { CreateProductDTO } from "../dto/product.dto";
 import fs from "fs";
 import csv from "csv-parser";
 import path from "path";
@@ -33,7 +33,7 @@ export const seedProducts = async (): Promise<void> => {
         let count = 0;
         try {
           for (const row of rows) {
-            const productData: CreateProductDto = {
+            const productData: CreateProductDTO = {
               code: row.code || `PRD-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
               name: `${row.name} ${Math.random().toString(36).substr(2, 4).toUpperCase()}`, // ensure uniqueness
               price: parseFloat(row.price) || 0,

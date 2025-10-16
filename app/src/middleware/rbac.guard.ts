@@ -1,8 +1,6 @@
 // app/src/middlewares/rbac.guard.ts
 import { Request, Response, NextFunction } from "express";
-import { assertActiveRole } from "../services/rbac.service";
-
-
+import { assertActiveRole } from "../utils/rbac.util";
 
 /**
  * Role-Based Access Control (RBAC) Guard

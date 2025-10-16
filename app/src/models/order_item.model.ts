@@ -27,6 +27,7 @@ export interface OrderItemAttributes {
     product_id:number;
     order_id: number;
     quantity: number;
+    is_active: boolean;
 }
 
 /**
@@ -48,6 +49,7 @@ class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> 
     public order_id!: number;
     public product_id!: number;
     public quantity!: number;
+    public is_active!: boolean;
 }
 
 
@@ -91,6 +93,10 @@ OrderItem.init(
         quantity: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        is_active:{
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
         }
     },
     {

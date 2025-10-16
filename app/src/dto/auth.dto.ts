@@ -10,17 +10,18 @@
  */
 
 /**
- * Data Transfer Object for user registration.
+ * Data Transfer Object for seller registration.
  *
  * @property {string} document - Unique document for login.
- * @property {string} password - User password (will be encrypted).
- * @property {string} fullname - Full name of the user.
- * @property {string} email - Unique email address of the user.
+ * @property {string} password - Seller password (will be encrypted).
+ * @property {string} fullname - Full name of the seller.
+ * @property {string} email - Unique email address of the seller.
  */
+
 export interface RegisterDto {
   document: string;
   password: string;
-  fullname: string;
+  full_name: string;
   email: string;
 }
 
@@ -40,10 +41,11 @@ export interface LoginDto {
  * Data Transfer Object for authentication response.
  *
  * @property {string} token - JWT token for authenticated requests.
- * @property {object} user - User information without sensitive data.
+ * @property {object} seller - Seller information without sensitive data.
  * @property {string} message - Success message.
  *
  */
+
 export interface AuthResponseDto {
   token: string;
   message: string;
@@ -61,17 +63,24 @@ export interface AuthResponseDto {
  *
  * @property {number} id_user - Unique user identifier.
  * @property {string} document - document.
- * @property {string} fullname - Full name of the user.
+ * @property {string} full_name - Full name of the user.
  * @property {string} email - Email address.
  * @property {number} id_role - Role identifier.
  *
  */
+
 export interface UserProfileDto {
   id_user: number;
-  document: string;
-  fullname: string;
+  access_id: number;
+  full_name: string;
+  phone?: string;
   email: string;
-  id_role: number;
+  birth_date: string;
+  gender_id: number;
+  role: {
+    id_role: number;
+    name: string;
+  };
 }
 
 /**

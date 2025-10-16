@@ -10,9 +10,7 @@
 
 
 import { seedRoles } from "./role.seeder";
-
 import { seedOrderStatus } from "./order_status.seeder";
-
 import { seedAddresses } from "./address.seeder";
 import { seedAccesses } from "./access.seeder";
 import { seedProducts } from "./product.seeder";

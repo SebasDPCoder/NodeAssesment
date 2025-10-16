@@ -6,7 +6,6 @@ export interface UserAttributes {
     access_id: number,
     full_name: string,
     email: string,
-    role_id: number,
     is_active: boolean,
 }
 
@@ -15,7 +14,6 @@ type UserCreationAttributes = Optional<UserAttributes, "id_user">;
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes{
     id_user!: number;
     access_id!: number;
-    role_id!: number;
     full_name!: string;
     email!: string;
     is_active!: boolean;
@@ -29,10 +27,6 @@ User.init(
       primaryKey: true,
     },
     access_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    role_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

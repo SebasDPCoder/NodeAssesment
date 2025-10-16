@@ -7,7 +7,7 @@
 
 import { Request, Response } from "express";
 import * as customerDao from "../dao/customer.dao";
-import { CreateCustomerDto, UpdateCustomerDto } from "../dto/customer.dto";
+import { CreateCustomerDTO, UpdateCustomerDTO } from "../dto/customer.dto";
 
 // --- CREATE ---
 
@@ -17,12 +17,9 @@ import { CreateCustomerDto, UpdateCustomerDto } from "../dto/customer.dto";
  */
 export const createCustomer = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const dto: CreateCustomerDto = req.body;
-    if (typeof dto.birth_date === 'string') {
-        dto.birth_date = new Date(dto.birth_date);
-    }
+    const dto: CreateCustomerDTO = req.body;
 
-    if (!dto.address_id || !dto.birth_date || !dto.email || !dto.fullname || !dto.gender_id) {
+    if (!dto.address_id || !dto.email || !dto.full_name) {
       return res.status(200).send("Failed to create customer, fields are require")
     } else {
       const customer = await customerDao.createCustomer(dto);      
@@ -42,7 +39,7 @@ export const createCustomer = async (req: Request, res: Response): Promise<Respo
  */
 export const getCustomers = async (_req: Request, res: Response): Promise<Response> => {
   try {
-    const customers = await customerDao.getCustomer();
+    const customers = await customerDao.getCustomers();
     return res.json(customers);
   } catch (err: any) {
     console.error("Error getting customers:", err.message);
@@ -74,19 +71,6 @@ export const getCustomerById = async (req: Request, res: Response): Promise<Resp
   }
 };
 
-/**
- * Get only customers actives
- * GET /api/customers/active
- */
-export const getActiveCustomers = async (_req: Request, res: Response): Promise<Response> => {
-  try {
-    const customers = await customerDao.getCustomerActive();
-    return res.json(customers);
-  } catch (err: any) {
-    console.error("Error getting active customers:", err.message);
-    return res.status(500).json({ error: "Failed to retrieve active customers." });
-  }
-};
 
 /**
  * Update customer
@@ -95,11 +79,7 @@ export const getActiveCustomers = async (_req: Request, res: Response): Promise<
 export const updateCustomer = async (req: Request, res: Response): Promise<Response> => {
   try {
     const id_customer = parseInt(req.params.id, 10);
-    const data: UpdateCustomerDto = req.body;
-    
-    if (data.birth_date && typeof data.birth_date === 'string') {
-      data.birth_date = new Date(data.birth_date);
-    }
+    const data: UpdateCustomerDTO = req.body;
 
     if (Object.keys(data).length === 0) {
       return res.status(400).send("Failed to update customer, at least one field is required for update.");
