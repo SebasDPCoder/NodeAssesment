@@ -14,7 +14,6 @@ export const getUserById = async (id: number): Promise<UserDTO | null> => {
   return await User.findOne({ where: { id_user: id, is_active: true } });
 };
 
-
 export const createUserWithAccess = async (registerData: RegisterDto, hashedPassword: string) => {
     const roleId = (registerData as any).role_id || 2;
     const access = await Access.create({

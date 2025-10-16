@@ -36,7 +36,7 @@ WarehouseProduct.init(
       allowNull: false,
       references: {
         model: "warehouse",
-        key: "warehouse_id",
+        key: "id_warehouse",
       },
     },
     product_id: {

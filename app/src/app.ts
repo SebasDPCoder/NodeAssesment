@@ -5,7 +5,6 @@
 */
 
 import express from "express";
-import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 import customerRoutes from "./routes/customer.routes"
 import orderStatusRoutes from "./routes/order_status.routes";
@@ -13,6 +12,7 @@ import roleRoutes from "./routes/role.routes";
 import addressRoutes from "./routes/address.routes";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger";
+import { productRoutes } from "./routes";
 
 const app = express();
 
@@ -21,13 +21,8 @@ app.use(express.json());
 // Router
 app.use("/api/auth", authRoutes);
 app.use("/api/customers", customerRoutes);
-app.use("/api/order_status", orderStatusRoutes);
-app.use("/api/role", roleRoutes);
-app.use("/api/address", addressRoutes);
+app.use("/product", productRoutes);
 
-
-// Products Route
-app.use("/api/products", productRoutes);
 
 
 // Swagger

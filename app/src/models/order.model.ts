@@ -85,8 +85,8 @@ Order.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references:{
-        model: "warehouses",
-        key: "id_warehouses",
+        model: "warehouse",
+        key: "id_warehouse",
       }
     },
     is_active: {

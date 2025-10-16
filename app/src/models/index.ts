@@ -28,14 +28,6 @@ import User from "./user.model";
 import Warehouse from "./warehouse.model";
 import WarehouseProduct from "./warehouse_product.model";
 
-import {applyAssociations} from "./associations";
-/**
- * Apply associations between models.
- * -----------------
- * This step connects models based on their
- * foreign keys and logical relationships.
- */
-applyAssociations()
 /**
  * Synchronize database schema.
  * -----------------

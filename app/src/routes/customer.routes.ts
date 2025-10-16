@@ -84,7 +84,7 @@ const router = Router();
  *               message: "Internal server error during creation"
  */
 
-router.post("/", authMiddleware(),requireRoleByName('Admin','Seller'),createCustomer);
+router.post("/", authMiddleware(),requireRoleByName('Admin','Analyst'),createCustomer);
 
 // --- GET all ---
 /**
@@ -122,7 +122,7 @@ router.post("/", authMiddleware(),requireRoleByName('Admin','Seller'),createCust
  *               success: false
  *               message: "Internal server error while retrieving customers"
  */
-router.get("/", authMiddleware(),requireRoleByName('Admin','Seller'),getCustomers);
+router.get("/", authMiddleware(),requireRoleByName('Admin','Analyst'),getCustomers);
 
 
 // --- GET by ID ---
@@ -176,7 +176,7 @@ router.get("/", authMiddleware(),requireRoleByName('Admin','Seller'),getCustomer
  *               success: false
  *               message: "Internal server error while retrieving customer"
  */
-router.get("/:id", authMiddleware(),requireRoleByName('Admin','Seller'),getCustomerById);
+router.get("/:id", authMiddleware(),requireRoleByName('Admin','Analyst'),getCustomerById);
 
 // --- UPDATE ---
 /**
@@ -238,7 +238,7 @@ router.get("/:id", authMiddleware(),requireRoleByName('Admin','Seller'),getCusto
  *               success: false
  *               message: "Internal server error while updating customer"
  */
-router.patch("/:id", authMiddleware(),requireRoleByName('Admin','Seller'),updateCustomer);
+router.patch("/:id", authMiddleware(),requireRoleByName('Admin','Analyst'),updateCustomer);
 
 // --- DELETE ---
 /**
@@ -272,6 +272,6 @@ router.patch("/:id", authMiddleware(),requireRoleByName('Admin','Seller'),update
  *               success: false
  *               message: "Internal server error while deleting customer"
  */
-router.delete("/:id", authMiddleware(),requireRoleByName('Admin','Seller'),softDeleteCustomer);
+router.delete("/:id", authMiddleware(),requireRoleByName('Admin','Analyst'),softDeleteCustomer);
 
 export default router;

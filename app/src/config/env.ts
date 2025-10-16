@@ -1,4 +1,4 @@
-
+import { swaggerSchemas } from '../docs/swagger/components.schemas';
 
 /**
  * Environment Configuration
@@ -68,4 +68,39 @@ export const validateEnvConfig = () => {
   }
   
   return missingVars.length === 0;
+};
+
+/**
+ * Configuring Swagger Using Environment Variables
+ */
+export const swaggerConfig = {
+  openapi: "3.0.0",
+  info: {
+    title: envConfig.API_TITLE,
+    version: envConfig.API_VERSION,
+    description: envConfig.API_DESCRIPTION,
+  },
+  servers: [
+    {
+      url: `http://localhost:${envConfig.PORT}/api`,
+      description: "Development server"
+    }
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT"
+      }
+    },
+    schemas: {
+      ...swaggerSchemas
+    }
+  },
+  security: [
+    {
+      bearerAuth: []
+    }
+  ]
 };
