@@ -74,52 +74,58 @@ Full order history per client.
 Automatic stock validation before creating orders.
 
 # 🧩 Project Structure
-app/
-│
-├── src/
-│   ├── config/           # DB and environment configuration
-│   ├── controllers/      # Business logic per module
-│   ├── dao/              # Data Access Objects (Sequelize queries)
-│   ├── dto/              # Data Transfer Objects with validations
-│   ├── middlewares/      # Authentication, validations, roles
-│   ├── models/           # Sequelize model definitions
-│   ├── routes/           # Express routes per module
-│   ├── seeders/          # Initial database population
-│   ├── services/         # Logic between DAO and Controller
-│   └── utils/            # General utilities (helpers, constants)
-│
+<pre>
+├── app
+│   ├── src
+│   │   ├── app.ts
+│   │   ├── config
+│   │   ├── controllers
+│   │   ├── dao
+│   │   ├── data
+│   │   ├── docs
+│   │   ├── dto
+│   │   ├── middleware
+│   │   ├── models
+│   │   ├── routes
+│   │   ├── seeders
+│   │   ├── server.ts
+│   │   ├── types
+│   │   └── utils
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── package-lock.json
+│   └── tsconfig.json
 ├── docker-compose.yml
-├── Dockerfile
-├── .env
 └── README.md
+</pre>
+# 🐳 Run with Docker Compose
 
-🐳 Run with Docker Compose
-# 1️⃣ Prerequisites
+## 1️⃣ Prerequisites
 
 Install Docker Desktop or Docker Engine + Docker Compose v2
 
 Clone the repository:
 
 git clone https://github.com/https://github.com/SebasDPCoder/NodeAssesment.git
-cd fhl-logistics-api
 
-# 2️⃣ Configure Environment Variables
+
+## 2️⃣ Configure Environment Variables
 
 Create a .env file in the project root with the following content:
 
-# Server
+### Server
 PORT=3000
 NODE_ENV=development
 JWT_SECRET=supersecretkey
 
-# Database
+### Database
 DB_HOST=db
 DB_PORT=5432
 DB_NAME=fhl_logistics
 DB_USER=postgres
 DB_PASSWORD=postgres
 
-3️⃣ Start the Application
+## 3️⃣ Start the Application
 docker-compose up --build
 
 
@@ -129,11 +135,9 @@ app → Express API (port 3000)
 
 db → PostgreSQL database (port 5432)
 
-4️⃣ Check Status
+## 4️⃣ Check Status
 
 API: http://localhost:3000/api
-
-Swagger Docs: http://localhost:3000/api/docs
 
 PostgreSQL: localhost:5432 (user: postgres, password: postgres)
 
@@ -141,12 +145,12 @@ PostgreSQL: localhost:5432 (user: postgres, password: postgres)
 
 To load initial data (users, clients, warehouses, products):
 
-docker exec -it fhl-app npm run seed
+docker exec -it node_app_logistics npm run sync-seed
 
 
 This runs the files located in app/src/seeders.
 
-🔐 Authentication
+## 🔐 Authentication
 
 Register a user → /api/auth/register
 
@@ -156,14 +160,14 @@ You’ll receive a JWT token to include in the request header:
 
 Authorization: Bearer <token>
 
-📚 Main Endpoints
-👤 Users
+# 📚 Main Endpoints
+## 👤 Users
 
 POST /api/auth/register → Create user (Admin or Analyst)
 
 POST /api/auth/login → Log in
 
-👥 Clients
+## 👥 Clients
 
 GET /api/customers → List clients
 
@@ -171,19 +175,19 @@ POST /api/customers/search → Search client by ID
 
 POST /api/customers → Create new client
 
-🏢 Warehouses
+## 🏢 Warehouses
 
 GET /api/warehouses → List active warehouses
 
 PATCH /api/warehouses/:id/status → Activate/Deactivate warehouse
 
-📦 Products
+## 📦 Products
 
 GET /api/products/:code → Get product by code
 
 DELETE /api/products/:id → Logical delete
 
-🚚 Orders
+## 🚚 Orders
 
 POST /api/orders → Create new order
 
@@ -191,7 +195,7 @@ PATCH /api/orders/:id/status → Update order status
 
 GET /api/orders/history/:customerId → Get client order history
 
-🧠 Validations & Middlewares
+## 🧠 Validations & Middlewares
 
 ❌ Cannot create a client with a duplicate ID.
 
@@ -203,60 +207,8 @@ GET /api/orders/history/:customerId → Get client order history
 
 👩‍💻 Analyst → Read-only + order status updates.
 
-🧾 Swagger Documentation
 
-Access the full documentation at:
-📄 http://localhost:3000/api/docs
-
-Includes:
-
-Available routes
-
-Response codes
-
-Request/response examples
-
-Required roles per endpoint
-
-🧹 Best Practices & Structure
-
-✔️ Gitflow Workflow:
-
-main → Stable version
-
-develop → Integration branch
-
-feature/* → New feature branches
-
-✔️ Conventional Commits:
-Examples:
-
-feat(order): add endpoint to update order status
-fix(auth): correct JWT validation logic
-docs(readme): add Swagger URL
-
-
-✔️ Well-commented, modularized code
-✔️ DTO & middleware validations
-✔️ Global error handling with errorHandler
-
-✅ Acceptance Criteria Met
-
-User registration and JWT login
-
-Full CRUD for clients, warehouses, products, and orders
-
-Role-based access control
-
-Business validations (stock, duplicates, status)
-
-Database seeding
-
-Swagger documentation
-
-Modular, scalable structure
-
-👨‍💻 Author
+##  👨‍💻 Author
 
 Developed by Sebastian
 Clan: Tayrona
