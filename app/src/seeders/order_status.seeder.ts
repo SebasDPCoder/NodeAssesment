@@ -26,7 +26,7 @@ import path from 'path';
  */
 export const seedOrderStatus = async (): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const csvPath = path.join(__dirname, '../data/orderStatus.csv');
+    const csvPath = path.join(__dirname, '../data/order_status.csv');
     let count = 0;
     
     fs.createReadStream(csvPath)

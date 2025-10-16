@@ -37,8 +37,8 @@ export const envConfig = {
   
   // Swagger API Configuration
   API_VERSION: process.env.API_VERSION || 'v1',
-  API_TITLE: process.env.API_TITLE || 'Appointments API',
-  API_DESCRIPTION: process.env.API_DESCRIPTION || 'API for medical appointments system with secure authentication',
+  API_TITLE: process.env.API_TITLE || 'Logistics API',
+  API_DESCRIPTION: process.env.API_DESCRIPTION || 'API for FHL logistics with secure authentication',
   
   // Database configuration (adapted to .env variable names)
   DB_HOST: process.env.DB_CONTAINER_NAME, // In Docker, this is the service name

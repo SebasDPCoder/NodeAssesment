@@ -16,19 +16,17 @@
 import sequelize from "../config/database";
 
 // Import models
-import Seller from "./seller.model";
 import Role from "./role.model";
-import PaymentMethod from "./payment_method.model";
-import Category from "./category.model";
+import Order from "./order.model";
+import OrderItem from "./order_item.model";
 import OrderStatus from "./order_status.model";
-import Gender from "./gender.model";
 import Customer from "./customer.model";
 import Access from "./access.model";
 import Address from "./address.model";
 import Product from "./product.model";
-import Order from "./order.model";
-import OrderPayment from "./order_payment.model";
-import OrderItem from "./order_item.model";
+import User from "./user.model";
+import Warehouse from "./warehouse.model";
+import WarehouseProduct from "./warehouse_product.model";
 
 import {applyAssociations} from "./associations";
 /**
@@ -72,18 +70,16 @@ const syncDB = async () => {
  */
 export {
   sequelize,
-  Seller,
   Role,
-  PaymentMethod,
-  Category,
   Customer,
-  Gender,
   Order,
   OrderItem,
-  OrderPayment,
   OrderStatus,
   Product,
   syncDB,
   Access,
   Address,
+  User,
+  Warehouse,
+  WarehouseProduct,
 };

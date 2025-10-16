@@ -1,0 +1,5 @@
+id_customer,address_id,fullname,email,is_active,created_at,updated_at
+1,1,Camila Rodriguez,camila.rod@gmail.com,true,2025-10-16,2025-10-16
+2,2,Juan Perez,juan.perez@gmail.com,true,2025-10-16,2025-10-16
+3,3,Lina Gomez,lina.gomez@gmail.com,true,2025-10-16,2025-10-16
+4,4,Santiago Mejia,santiago.mejia@gmail.com,true,2025-10-16,2025-10-16

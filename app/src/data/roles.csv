@@ -1,0 +1,4 @@
+id_role,name,is_active,created_at,updated_at
+1,Admin,true,2025-10-16,2025-10-16
+2,Analyst,true,2025-10-16,2025-10-16
+3,Analyst,true,2025-10-16,2025-10-16

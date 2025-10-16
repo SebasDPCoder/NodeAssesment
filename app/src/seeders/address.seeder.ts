@@ -42,11 +42,11 @@ export const seedAddresses = async (): Promise<void> => {
         if (!existing) {
           await Address.create({
             country: row.country,
-            department: row.department,
             city: row.city,
-            postal_code: row.postal_code,
+            department: row.department,
             street: row.street,
             number: row.number,
+            postal_code: row.postal_code,
             is_active: row.is_active === 'true'
           });
           count++;

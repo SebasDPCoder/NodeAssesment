@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import * as orderStatusDao from "../dao/order_status.dao";
 
-// --- READ (GET) ---
-
 /**
  * Get order_status actives and inactives
  * GET /api/order_status

@@ -14,7 +14,7 @@
  */
 
 import { createUser } from "../dao/user.dao";
-import { CreateUserDto } from "../dto/user.dto";
+import { CreateUserDTO } from "../dto/user.dto";
 import Access from "../models/access.model";
 import fs from 'fs';
 import csv from 'csv-parser';
@@ -34,7 +34,7 @@ export const seedUsers = async (): Promise<void> => {
   }
 
   return new Promise((resolve, reject) => {
-    const csvPath = path.join(__dirname, '../data/Users.csv');
+    const csvPath = path.join(__dirname, '../data/users.csv');
     const rows: any[] = [];
     fs.createReadStream(csvPath)
       .pipe(csv())
@@ -48,9 +48,9 @@ export const seedUsers = async (): Promise<void> => {
             const access = accesses.find(a => a.document === row.document);
             if (!access) continue;
 
-            const UserData: CreateUserDto = {
+            const UserData: CreateUserDTO = {
               access_id: access.id_access,
-              fullname: row.fullname,
+              full_name: row.full_name,
               email: row.email,
               is_active: true
             };
@@ -58,7 +58,7 @@ export const seedUsers = async (): Promise<void> => {
             try {
               await createUser(UserData);
               count++;
-              console.log(`✓ user created: ${row.fullname}`);
+              console.log(`✓ user created: ${row.full_name}`);
             } catch (error: any) {
               if (!error.message?.includes('unique constraint')) {
                 console.error(`Error creating user ${row.email}:`, error.message);

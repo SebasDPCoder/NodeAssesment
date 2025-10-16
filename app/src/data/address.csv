@@ -1,0 +1,5 @@
+id_address,country,city,department,street,number,postal_code,is_active,created_at,updated_at
+1,Colombia,Bogota,Cundinamarca,Calle 45,23A,110111,true,2025-10-16,2025-10-16
+2,Colombia,Medellin,Antioquia,Carrera 70,12B,050021,true,2025-10-16,2025-10-16
+3,Colombia,Cali,Valle del Cauca,Avenida 6,89C,760031,true,2025-10-16,2025-10-16
+4,Colombia,Barranquilla,Atlantico,Calle 84,5D,080020,true,2025-10-16,2025-10-16

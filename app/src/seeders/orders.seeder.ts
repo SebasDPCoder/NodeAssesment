@@ -14,11 +14,10 @@
  */
 
 import { createOrder } from "../dao/order.dao";
-import { CreateOrderDto } from "../dto/order.dto";
+import { CreateOrderDTO } from "../dto/order.dto";
 import Customer from "../models/customer.model";
-import Seller from "../models/seller.model";
-import PaymentMethod from "../models/payment_method.model";
 import OrderStatus from "../models/order_status.model";
+import Warehouse from "../models/warehouse.model";
 import fs from 'fs';
 import csv from 'csv-parser';
 import path from 'path';
@@ -31,12 +30,11 @@ import path from 'path';
  */
 export const seedOrders = async (): Promise<void> => {
   const customers = await Customer.findAll();
-  const sellers = await Seller.findAll();
-  const paymentMethods = await PaymentMethod.findAll();
   const orderStatuses = await OrderStatus.findAll();
+  const warehouses = await Warehouse.findAll();
 
-  if (customers.length === 0 || sellers.length === 0 || paymentMethods.length === 0 || orderStatuses.length === 0) {
-    console.log("❌ Required data not found. Run customer, seller, payment method, and order status seeders first.");
+  if (customers.length === 0 || orderStatuses.length === 0 || warehouses.length === 0) {
+    console.log("❌ Required data not found. Run customer,warehouse and order status seeders first.");
     return;
   }
 
@@ -54,19 +52,15 @@ export const seedOrders = async (): Promise<void> => {
         try {
           for (const row of rows) {
             const customer = customers[parseInt(row.customer_index)];
-            const seller = sellers[parseInt(row.seller_index) || 0];
-            const paymentMethod = paymentMethods.find(pm => pm.name === row.payment_method);
             const orderStatus = orderStatuses.find(os => os.name === row.order_status);
+            const warehouse = warehouses[parseInt(row.warehouse_index)]
             
-            if (!customer || !seller || !paymentMethod || !orderStatus) continue;
+            if (!customer || !orderStatus || !warehouse) continue;
 
-            const orderData: CreateOrderDto = {
+            const orderData: CreateOrderDTO = {
               customer_id: customer.id_customer,
-              seller_id: seller.id_seller,
-              payment_method_id: paymentMethod.id_payment_method,
               order_status_id: orderStatus.id_order_status,
-              payment_date: new Date(row.payment_date),
-              total: parseFloat(row.total),
+              warehouse_id: warehouse.id_warehouse,
               is_active: true
             };
 

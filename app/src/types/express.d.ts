@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { JWTPayload } from "../services/jwt.service";
+import { JWTPayload } from "../services/jwt.util";
 
 /**
  * Extension of the `Express.Request` type

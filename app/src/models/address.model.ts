@@ -21,11 +21,11 @@ import sequelize from "../config/database";
 export interface AddressAttributes {
     id_address: number;
     country: string;
-    department: string;
     city: string;
-    postal_code: string;
+    department: string;
     street: string;
     number: string;
+    postal_code: string;
     is_active: boolean;
 }
 
@@ -45,11 +45,11 @@ class Address extends Model<AddressAttributes, AddressCreationAttributes> implem
 
     public id_address!: number;
     public country!: string;
-    public department!: string;
     public city!: string;   
-    public postal_code!: string;
+    public department!: string;
     public street!: string;
     public number!: string;
+    public postal_code!: string;
     public is_active!: boolean;
 }
 
@@ -58,11 +58,11 @@ class Address extends Model<AddressAttributes, AddressCreationAttributes> implem
  *
  * - `id_address`: Auto-incrementing integer, primary key.
  * - `country`: Foreign key referencing the country of the address.
- * - `departament_id`: Foreign key referencing the department of the address.
  * - `city`: Foreign key referencing the city of the address.
- * - `postal_code`: String representing the postal code.
+ * - `departament_id`: Foreign key referencing the department of the address.
  * - `street`: String representing the street name.
  * - `number`: String representing the street number.
+ * - `postal_code`: String representing the postal code.
  * - `is_active`: Boolean to determine if the address is active or inactive.
  */
 Address.init(
@@ -76,16 +76,12 @@ Address.init(
             type: DataTypes.STRING(100),
             allowNull: false
         },
-        department: {
-            type: DataTypes.STRING(100),
-            allowNull: false
-        },
         city: {
             type: DataTypes.STRING(100),
             allowNull: false
         },
-        postal_code: {
-            type: DataTypes.STRING(20),
+        department: {
+            type: DataTypes.STRING(100),
             allowNull: false
         },
         street: {
@@ -95,6 +91,10 @@ Address.init(
         number: {
             type: DataTypes.STRING(20),
             allowNull: false,
+        },
+        postal_code: {
+            type: DataTypes.STRING(20),
+            allowNull: true
         },
         is_active: {
             type: DataTypes.BOOLEAN,

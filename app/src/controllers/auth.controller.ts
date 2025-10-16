@@ -13,14 +13,15 @@
  */
 
 
-// --- Imports ---
 import { Request, Response } from "express";
-import * as userDao from "../dao/user.dao";
-import { hashPassword, comparePassword, validatePasswordStrength } from "../services/password.service";
-import { generateToken, verifyToken, extractTokenFromHeader } from "../services/jwt.service";
-import { validateRegisterData, validateLoginFields } from "../services/validation.service";
-import { RegisterDto, LoginDto, AuthResponseDto, ErrorResponseDto } from "../dto/auth.dto";
+import * as userDao from "../dao/user.dao"
+import { findByDocument } from "../dao/access.dao";
+import { hashPassword, comparePassword, validatePasswordStrength } from "../utils/password.util";
+import { generateToken, verifyToken, extractTokenFromHeader } from "../utils/jwt.util";
+import { validateRegisterData, validateLoginFields } from "../utils/validation.util";
+import { AuthResponseDto, ErrorResponseDto, RegisterDto, LoginDto } from "../dto/auth.dto";
 import Access from "../models/access.model";
+import { AccessWithUser } from "../types/accessWithUser";
 
 
 
@@ -74,7 +75,7 @@ export const register = async (req: Request, res: Response): Promise<Response> =
     if (validationError) return res.status(400).json(validationError as ErrorResponseDto);
 
     // Check for duplicate document
-    const existingAccess = await userDao.findByDocument(registerData.document);
+    const existingAccess = await findByDocument(registerData.document);
     if (existingAccess) {
       return res.status(409).json({ success: false, message: 'Document already exists' } as ErrorResponseDto);
     }
@@ -105,7 +106,7 @@ export const register = async (req: Request, res: Response): Promise<Response> =
       user: {
         id_user: userAny.id_user,
         document: accessAny.document,
-        fullname: userAny.fullname,
+        full_name: userAny.full_name,
         email: userAny.email,
         role: accessAny.role ? {
           id_role: accessAny.role.id_role,
@@ -138,7 +139,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     const validationError: any = validateLoginFields(loginData);
     if (validationError) return res.status(400).json(validationError as ErrorResponseDto);
 
-    const access = await userDao.findByDocument(loginData.document) as Access & { user?: any };
+    const access = await findByDocument(loginData.document) as AccessWithUser;
     if (!access || !access.user) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' } as ErrorResponseDto);
     }

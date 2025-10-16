@@ -1,0 +1,6 @@
+id_product,code,name,price,is_active,created_at,updated_at
+1,P-001,Laptop Lenovo,2800000,true,2025-10-16,2025-10-16
+2,P-002,Mouse Logitech,80000,true,2025-10-16,2025-10-16
+3,P-003,Keyboard Redragon,150000,true,2025-10-16,2025-10-16
+4,P-004,Monitor Samsung,1200000,true,2025-10-16,2025-10-16
+5,P-005,Headset HyperX,350000,true,2025-10-16,2025-10-16

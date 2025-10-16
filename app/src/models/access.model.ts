@@ -36,28 +36,17 @@ export interface AccessCreationAttributes extends Optional<AccessAttributes, "id
  * Implements the attributes defined in `AccessAttributes` and `AccessCreationAttributes`.
  */
 class Access extends Model<AccessAttributes, AccessCreationAttributes> implements AccessAttributes {
-    /** Unique access identifier (primary key). */
     public id_access!: number;
-
-    /** Role identifier associated with this access. */
     public role_id!: number;
-
-    /** document for analyst login. */
     public document!: string;
-
-    /** Hashed password for user login. */
     public password!: string;
-
-    /** Whether the access is active or inactive. */
     public is_active!: boolean;
 }
 
 /**
  * Initialization of the `Access` model with Sequelize configuration.
  *
- * - `id_access`: Auto-incrementing integer, primk* - `role_id`: Foreign key to the role table.
-ey k* - `role_id`: Foreign key to the role table.
-ey.
+ * - `id_access`: Auto-incrementing integer, primary key 
  * - `role_id`: Foreign key to the role table.
  * - `document`: document for analyst login.
  * - `password`: Hashed password for analyst login.
@@ -90,8 +79,7 @@ Access.init(
         is_active: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            defaultValue: true,
-        },
+        }
     },
     {
         sequelize,

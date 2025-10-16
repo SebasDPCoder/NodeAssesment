@@ -14,7 +14,7 @@
  */
 
 import { createAccess } from "../dao/access.dao";
-import { CreateAccessDto } from "../dto/access.dto";
+import { CreateAccessDTO } from "../dto/access.dto";
 import Role from "../models/role.model";
 import fs from 'fs';
 import csv from 'csv-parser';
@@ -53,7 +53,7 @@ export const seedAccesses = async (): Promise<void> => {
 
             const hashedPassword = await bcrypt.hash(row.password, 10);
             
-            const accessData: CreateAccessDto = {
+            const accessData: CreateAccessDTO = {
               role_id: role.id_role,
               document: row.document,
               password: hashedPassword,

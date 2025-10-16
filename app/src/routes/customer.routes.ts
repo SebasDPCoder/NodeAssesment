@@ -16,8 +16,7 @@ import {
     getCustomers, 
     getCustomerById, 
     updateCustomer, 
-    softDeleteCustomer,
-    getActiveCustomers
+    softDeleteCustomer
 } from "../controllers/customer.controller";
 import { authMiddleware } from "../middleware/auth.midleware";
 import { requireRoleByName } from "../middleware/rbac.guard";
@@ -125,37 +124,6 @@ router.post("/", authMiddleware(),requireRoleByName('Admin','Seller'),createCust
  */
 router.get("/", authMiddleware(),requireRoleByName('Admin','Seller'),getCustomers);
 
-// --- GET active ---
-/**
- * @swagger
- * /customers/active:
- *   get:
- *     summary: Get all active customers
- *     tags: [Customers]
- *     responses:
- *       200:
- *         description: List of active customers retrieved successfully
- *         content:
- *           application/json:
- *             example:
- *               success: true
- *               message: "Active customers retrieved successfully"
- *               data:
- *                 - id_customer: 1
- *                   fullname: "David Martinez"
- *                   email: "david@example.com"
- *                   phone: "+573001112233"
- *                   birth_date: "1995-05-20T00:00:00.000Z"
- *                   active: true
- *       500:
- *         description: Failed to retrieve active customers
- *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: "Internal server error while retrieving active customers"
- */
-router.get("/active", authMiddleware(),requireRoleByName('Admin','Seller'),getActiveCustomers);
 
 // --- GET by ID ---
 /**

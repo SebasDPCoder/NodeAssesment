@@ -1,0 +1,5 @@
+id_warehouse,name,location,is_active,created_at,updated_at
+1,Main Warehouse,Bogota,true,2025-10-16,2025-10-16
+2,West Warehouse,Medellin,true,2025-10-16,2025-10-16
+3,South Warehouse,Cali,true,2025-10-16,2025-10-16
+4,North Warehouse,Barranquilla,true,2025-10-16,2025-10-16

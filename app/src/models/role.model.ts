@@ -8,7 +8,7 @@
  *  - Required attributes for creation (`RoleCreationAttributes`).
  *  - Model definition with its columns and constraints.
  *
- * This model is used by services and controllers to perform CRUD operations for seller roles.
+ * This model is used by services and controllers to perform CRUD operations for user roles.
  */
 
 
@@ -39,13 +39,8 @@ export interface RoleCreationAttributes extends Optional<RoleAttributes, "id_rol
  */
 
 class Role extends Model<RoleAttributes, RoleCreationAttributes> implements RoleAttributes {
-    /** Unique identifier of the role (primary key). */
     public id_role!: number;
-
-    /** Name of the role. */
     public name!: string;
-
-    /** Status of the role (active/inactive). */
     public is_active!: boolean;
 }
 
@@ -65,7 +60,7 @@ Role.init(
             primaryKey: true,
         },
         name: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(60),
             unique: true,
             allowNull: false,
         },

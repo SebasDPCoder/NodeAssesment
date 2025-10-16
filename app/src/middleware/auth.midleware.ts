@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { extractTokenFromHeader, verifyToken, JWTPayload } from '../services/jwt.service'
+import { extractTokenFromHeader, verifyToken, JWTPayload } from '../utils/jwt.util'
 
 /**
  * Middleware generator for JWT authentication and role-based access control.t
