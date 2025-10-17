@@ -63,10 +63,10 @@ export const seedAccesses = async (): Promise<void> => {
             try {
               await createAccess(accessData);
               count++;
-              console.log(`✓ Access created: ${row.username}`);
+              console.log(`✓ Access created: ${row.document}`);
             } catch (error: any) {
               if (!error.message?.includes('unique constraint')) {
-                console.error(`Error creating access ${row.username}:`, error.message);
+                console.error(`Error creating access ${row.document}:`, error.message);
               }
             }
           }

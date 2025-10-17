@@ -51,9 +51,9 @@ export const seedOrders = async (): Promise<void> => {
         let count = 0;
         try {
           for (const row of rows) {
-            const customer = customers[parseInt(row.customer_index)];
-            const orderStatus = orderStatuses.find(os => os.name === row.order_status);
-            const warehouse = warehouses[parseInt(row.warehouse_index)]
+            const customer = customers[parseInt(row.id_customer)];
+            const orderStatus = orderStatuses.find(os => os.name === row.id_order_status);
+            const warehouse = warehouses[parseInt(row.id_warehouse)]
             
             if (!customer || !orderStatus || !warehouse) continue;
 
@@ -67,7 +67,7 @@ export const seedOrders = async (): Promise<void> => {
             try {
               await createOrder(orderData);
               count++;
-              if (count % 50 === 0) {
+              if (count % 100 === 0) {
                 console.log(`✓ Orders created: ${count}`);
               }
             } catch (error: any) {

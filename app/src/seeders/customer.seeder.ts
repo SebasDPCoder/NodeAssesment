@@ -47,7 +47,7 @@ export const seedCustomers = async (): Promise<void> => {
         let count = 0;
         try {
           for (const row of rows) {
-            const address = addresses[parseInt(row.address_index)];
+            const address = addresses[parseInt(row.id_address)];
             
             if (!address) continue;
 

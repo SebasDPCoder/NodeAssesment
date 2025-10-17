@@ -31,6 +31,10 @@ export const seedOrderItems = async (): Promise<void> => {
   const orders = await Order.findAll();
   const products = await Product.findAll();
 
+  console.log(orders);
+  console.log(products);
+    
+
   if (orders.length === 0 || products.length === 0) {
     console.log("❌ Orders or products not found. Run orders and products seeders first.");
     return;
@@ -49,8 +53,8 @@ export const seedOrderItems = async (): Promise<void> => {
         let count = 0;
         try {
           for (const row of rows) {
-            const order = orders[parseInt(row.order_index)];
-            const product = products[parseInt(row.product_index)];
+            const order = orders[parseInt(row.id_order)];
+            const product = products[parseInt(row.id_product)];
             
             if (!order || !product) continue;
 

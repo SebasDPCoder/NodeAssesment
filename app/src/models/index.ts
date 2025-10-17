@@ -17,6 +17,7 @@ import sequelize from "../config/database";
 
 // Import models
 import Role from "./role.model";
+import Warehouse from "./warehouse.model";
 import Order from "./order.model";
 import OrderItem from "./order_item.model";
 import OrderStatus from "./order_status.model";
@@ -25,7 +26,6 @@ import Access from "./access.model";
 import Address from "./address.model";
 import Product from "./product.model";
 import User from "./user.model";
-import Warehouse from "./warehouse.model";
 import WarehouseProduct from "./warehouse_product.model";
 
 /**
@@ -64,6 +64,7 @@ export {
   sequelize,
   Role,
   Customer,
+  Warehouse,
   Order,
   OrderItem,
   OrderStatus,
@@ -72,6 +73,5 @@ export {
   Access,
   Address,
   User,
-  Warehouse,
   WarehouseProduct,
 };

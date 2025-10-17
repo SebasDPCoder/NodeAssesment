@@ -1,7 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
-import Warehouse from "./warehouse.model";
-import Product from "./product.model";
+
 
 export interface WarehouseProductAttributes {
   id_warehouse_product: number;
@@ -35,7 +34,7 @@ WarehouseProduct.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "warehouse",
+        model: "warehouses",
         key: "id_warehouse",
       },
     },
@@ -43,7 +42,7 @@ WarehouseProduct.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "product",
+        model: "products",
         key: "product_id",
       },
     },

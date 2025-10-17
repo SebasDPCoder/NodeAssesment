@@ -1,4 +1,4 @@
 id_access,role_id,document,password,is_active,created_at,updated_at
 1,1,1001234567,$2b$10$adminpass,true,2025-10-16,2025-10-16
 2,2,1007654321,$2b$10$operatorpass,true,2025-10-16,2025-10-16
-3,3,1009876543,$2b$10$customerpass,true,2025-10-16,2025-10-16
+3,2,1009876543,$2b$10$customerpass,true,2025-10-16,2025-10-16

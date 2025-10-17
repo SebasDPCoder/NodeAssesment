@@ -41,38 +41,25 @@ export const applyAssociations = () => {
   Address.hasMany(Customer, { foreignKey: "address", as: "addressCustomers" });
   Customer.belongsTo(Address, { foreignKey: "address", as: "customerAddress" });
 
-  Customer.hasMany(Order, { foreignKey: "customer_id", as: "customerOrders" });
-  Order.belongsTo(Customer, { foreignKey: "customer_id", as: "orderCustomer" });
-
-
-  OrderStatus.hasMany(Order, { foreignKey: "status_id", as: "statusOrders" });
-  Order.belongsTo(OrderStatus, { foreignKey: "status_id", as: "orderStatus" });
-
   Warehouse.hasMany(Order, { foreignKey: "warehouse_id", as: "warehouseOrders" });
   Order.belongsTo(Warehouse, { foreignKey: "warehouse_id", as: "orderWarehouse" });
 
-
+  Customer.hasMany(Order, { foreignKey: "customer_id", as: "customerOrders" });
+  Order.belongsTo(Customer, { foreignKey: "customer_id", as: "orderCustomer" });
+  
+  OrderStatus.hasMany(Order, { foreignKey: "status_id", as: "statusOrders" });
+  Order.belongsTo(OrderStatus, { foreignKey: "status_id", as: "orderStatus" });
+  
   // Order → OrderItem (1:N)
   Order.hasMany(OrderItem, { foreignKey: "order_id", as: "orderItems" });
   OrderItem.belongsTo(Order, { foreignKey: "order_id", as: "itemOrder" });
-
+  
   // Product → OrderItem (1:N)
   Product.hasMany(OrderItem, { foreignKey: "product_id", as: "productItems" });
   OrderItem.belongsTo(Product, { foreignKey: "product_id", as: "itemProduct" });
-
-  Warehouse.belongsToMany(Product, {
-    through: WarehouseProduct,
-    foreignKey: "warehouse_id",
-    otherKey: "product_id",
-    as: "warehouseProducts",
-  });
-
-  Product.belongsToMany(Warehouse, {
-    through: WarehouseProduct,
-    foreignKey: "product_id",
-    otherKey: "warehouse_id",
-    as: "productWarehouses",
-  });
+  
+  Warehouse.belongsToMany(Product, {through: WarehouseProduct,foreignKey: "warehouse_id",otherKey: "product_id",as: "warehouseProducts",});
+  Product.belongsToMany(Warehouse, {through: WarehouseProduct,foreignKey: "product_id",otherKey: "warehouse_id",as: "productWarehouses",});
 };
 
 

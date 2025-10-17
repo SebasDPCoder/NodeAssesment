@@ -86,7 +86,7 @@ OrderItem.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "product",
+                model: "products",
                 key: "id_product",
             }
         },

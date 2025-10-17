@@ -1,5 +1,3 @@
-// app/src/models/order.model.ts
-
 /**
  * Order Model
  * -----------------
@@ -85,7 +83,7 @@ Order.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references:{
-        model: "warehouse",
+        model: "warehouses",
         key: "id_warehouse",
       }
     },
