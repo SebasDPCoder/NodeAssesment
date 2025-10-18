@@ -74,81 +74,24 @@ Full order history per client.
 Automatic stock validation before creating orders.
 
 # 🧩 Project Structure
-```
-.
-├──app/
-├── src/
-│   ├── config/
-│   ├── controllers/
-│   ├── dao/
-│   ├── data/
-│   ├── docs/
-│   ├── dto/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── seeders/
-│   ├── types/
-│   ├── utils/
-│   ├── app.ts
-│   └── server.ts
-├── .dockerignore
-├── .env
-├── .gitignore
-├── Dockerfile
-├── docker-compose.yml
-├── package.json
-├── package-lock.json
-├── tsconfig.json
-└── README.md
-```
 
-# 🐳 Run with Docker Compose
-### 1️⃣ Prerequisites
+git clone https://github.com/https://github.com/SebasDPCoder/NodeAssesment.git
 
-Install Docker Desktop or Docker Engine + Docker Compose v2
 
-Clone the repository:
-
-git clone https://github.com/https://github.com/SebasDPCoder/FHL-logistics-api.git
-cd FHL-logistics-api
-
-### 2️⃣ Configure Environment Variables
+## 2️⃣ Configure Environment Variables
 
 Create a .env file in the project root with the following example:
 
-```
-# Node.js App
-APP_CONTAINER_NAME=node_app_logistics
-APP_PORT=3000
-NODE_ENV=development
-APP_CPU_LIMIT=0.50
-APP_MEM_LIMIT=512M
+### Database
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=fhl_logistics
+DB_USER=postgres
+DB_PASSWORD=postgres
 
-# PostgreSQL
-DB_CONTAINER_NAME=postgres_db
+## 3️⃣ Start the Application
+docker-compose up --build
 
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=supersecret123
-POSTGRES_HOST=localhost
-POSTGRES_DB=logistics
-POSTGRES_PORT=5432
-POSTGRES_LOCAL=5433
-DB_CPU_LIMIT=0.50
-DB_MEM_LIMIT=512M
-
-# JWT token and refresh token
-JWT_SECRET=be288baf75be999ee0c9a2ddb464cdac
-JWT_EXPIRES_IN=24h
-JWT_REFRESH_SECRET=refreshbe288baf75be999ee0c9a2ddb464cdac
-JWT_REFRESH_EXPIRES_IN=2d
-```
-
-### 3️⃣ Start the Application
-
-To build the docker images: `docker-compose build`
- 
-To up docker containers: `docker compose up -d`
 
 
 This will start the following services:
@@ -157,18 +100,19 @@ app → Express API (port 3000)
 
 db → PostgreSQL database (port 5432)
 
-### 4️⃣ Check Status
+
+## 4️⃣ Check Status
 
 API: http://localhost:3000/api
 
-Swagger Docs: http://localhost:3000/api/docs
+PostgreSQL: localhost:5432 (user: postgres, password: postgres)
 
 
 ## 🌱 Populate Database (Seeders)
 
 To load initial data (users, clients, warehouses, products):
 
-`docker exec -it node_app_logistics npm run sync-seed`
+docker exec -it node_app_logistics npm run sync-seed
 
 
 This runs the files located in app/src/seeders.
@@ -184,13 +128,15 @@ You’ll receive a JWT token to include in the request header:
 Authorization: Bearer <token>
 
 # 📚 Main Endpoints
- ### 👤 Users
+
+## 👤 Users
+
 
 POST /api/auth/register → Create user (Admin or Analyst)
 
 POST /api/auth/login → Log in
 
- ### 👥 Clients
+## 👥 Clients
 
 GET /api/customers → List clients
 
@@ -198,19 +144,19 @@ POST /api/customers/search → Search client by ID
 
 POST /api/customers → Create new client
 
- ### 🏢 Warehouses
+## 🏢 Warehouses
 
 GET /api/warehouses → List active warehouses
 
 PATCH /api/warehouses/:id/status → Activate/Deactivate warehouse
 
- ### 📦 Products
+## 📦 Products
 
 GET /api/products/:code → Get product by code
 
 DELETE /api/products/:id → Logical delete
 
- ### 🚚 Orders
+## 🚚 Orders
 
 POST /api/orders → Create new order
 
@@ -218,7 +164,7 @@ PATCH /api/orders/:id/status → Update order status
 
 GET /api/orders/history/:customerId → Get client order history
 
-# 🧠 Validations & Middlewares
+## 🧠 Validations & Middlewares
 
 ❌ Cannot create a client with a duplicate ID.
 
@@ -230,42 +176,11 @@ GET /api/orders/history/:customerId → Get client order history
 
 👩‍💻 Analyst → Read-only + order status updates.
 
-# 🧾 Swagger Documentation
-
-Access the full documentation at:
-📄 http://localhost:3000/api/docs
-
-Includes:
-
-Available routes
-
-Response codes
-
-Request/response examples
-
-Required roles per endpoint
 
 
-## ✅ Acceptance Criteria Met
-
-User registration and JWT login
-
-Full CRUD for clients, warehouses, products, and orders
-
-Role-based access control
-
-Business validations (stock, duplicates, status)
-
-Database seeding
-
-Swagger documentation
-
-Modular, scalable structure
-
-## 👨‍💻 Author
-
-**Developed** by Sebastian
+##  👨‍💻 Author
 
 **Clan:** Tayrona
 
-*🚀 Be a Coder*.
+🚀 Be a Coder.
+
