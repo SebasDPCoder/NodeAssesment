@@ -14,52 +14,48 @@ import csv from "csv-parser";
 import path from "path";
 
 /**
- * Seeds the product table with initial data.
+ * Seeds the `products` table with initial data.
  *
- * Reads data from `products.csv` and inserts records into the database.
- * Prevents duplicate entries by skipping existing ones (based on unique constraints).
+ * Loads product data from `products.csv` and inserts records into the database.
+ * Prevents duplicate entries by handling unique constraint errors.
  */
 export const seedProducts = async (): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  try {
     const csvPath = path.join(__dirname, "../data/products.csv");
     const rows: any[] = [];
 
-    fs.createReadStream(csvPath)
-      .pipe(csv())
-      .on("data", (row) => {
-        rows.push(row);
-      })
-      .on("end", async () => {
-        let count = 0;
-        try {
-          for (const row of rows) {
-            const productData: CreateProductDTO = {
-              code: row.code || `PRD-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
-              name: `${row.name} ${Math.random().toString(36).substr(2, 4).toUpperCase()}`, // ensure uniqueness
-              price: parseFloat(row.price) || 0,
-              is_active: false,
-            };
+    // Load CSV data
+    await new Promise<void>((resolve, reject) => {
+      fs.createReadStream(csvPath)
+        .pipe(csv())
+        .on("data", (row) => rows.push(row))
+        .on("end", resolve)
+        .on("error", reject);
+    });
 
-            try {
-              await createProduct(productData);
-              count++;
+    let count = 0;
 
-              if (count % 100 === 0) {
-                console.log(`✓ Products created: ${count}`);
-              }
-            } catch (error: any) {
-              if (!error.message?.includes("unique constraint")) {
-                console.error(`Error creating product ${row.name}:`, error.message);
-              }
-            }
-          }
+    // Process rows
+    for (const row of rows) {
+      const productData: CreateProductDTO = {
+        code: row.code || `PRD-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+        name: `${row.name} ${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
+        price: parseFloat(row.price) || 0,
+        is_active: row.is_active === "true",
+      };
 
-          console.log(`✅ ${count} products processed from CSV`);
-          resolve();
-        } catch (error) {
-          reject(error);
+      try {
+        await createProduct(productData);
+        count++;
+      } catch (error: any) {
+        if (!error.message?.includes("unique constraint")) {
+          console.error(`Error creating product ${row.name}:`, error.message);
         }
-      })
-      .on("error", reject);
-  });
+      }
+    }
+
+    console.log(`✅ ${count} products processed from CSV`);
+  } catch (error) {
+    console.error("❌ Failed to run product seed:", error);
+  }
 };

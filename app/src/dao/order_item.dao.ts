@@ -1,6 +1,7 @@
 import { OrderItem } from "../models";
 import { OrderItemDTO, CreateOrderItemDTO, UpdateOrderItemDTO } from "../dto/order_item.dto";
 
+
 export const getOrderItems = async (): Promise<OrderItemDTO[]> => {
   return await OrderItem.findAll({ where: { is_active: true } });
 };

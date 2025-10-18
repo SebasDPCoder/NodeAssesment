@@ -17,6 +17,7 @@ import sequelize from "../config/database";
 
 // Import models
 import Role from "./role.model";
+import Warehouse from "./warehouse.model";
 import Order from "./order.model";
 import OrderItem from "./order_item.model";
 import OrderStatus from "./order_status.model";
@@ -25,17 +26,13 @@ import Access from "./access.model";
 import Address from "./address.model";
 import Product from "./product.model";
 import User from "./user.model";
-import Warehouse from "./warehouse.model";
 import WarehouseProduct from "./warehouse_product.model";
 
-import {applyAssociations} from "./associations";
-/**
- * Apply associations between models.
- * -----------------
- * This step connects models based on their
- * foreign keys and logical relationships.
- */
-applyAssociations()
+// 👇 Importa la función de asociaciones
+import { applyAssociations } from "./associations";
+
+// ✅ Aplica las asociaciones usando los modelos ya importados
+applyAssociations();
 /**
  * Synchronize database schema.
  * -----------------
@@ -72,6 +69,7 @@ export {
   sequelize,
   Role,
   Customer,
+  Warehouse,
   Order,
   OrderItem,
   OrderStatus,
@@ -80,6 +78,5 @@ export {
   Access,
   Address,
   User,
-  Warehouse,
   WarehouseProduct,
 };

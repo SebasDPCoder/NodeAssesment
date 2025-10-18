@@ -1,5 +1,3 @@
-// app/src/seeders/11-orders.seeder.ts
-
 /**
  * Orders Seeder
  * -----------------
@@ -23,65 +21,64 @@ import csv from 'csv-parser';
 import path from 'path';
 
 /**
- * Seeds the orders table with initial test orders.
+ * Seeds the `orders` table with initial test orders.
  * 
- * Creates sample orders if they don't already exist.
- * Prevents duplicate entries by checking existing records.
+ * Loads order data from a CSV file and creates records
+ * if the corresponding customer, status, and warehouse exist.
+ * Prevents duplicates and handles errors gracefully.
  */
 export const seedOrders = async (): Promise<void> => {
-  const customers = await Customer.findAll();
-  const orderStatuses = await OrderStatus.findAll();
-  const warehouses = await Warehouse.findAll();
+  try {
+    const customers = await Customer.findAll();
+    const orderStatuses = await OrderStatus.findAll();
+    const warehouses = await Warehouse.findAll();
 
-  if (customers.length === 0 || orderStatuses.length === 0 || warehouses.length === 0) {
-    console.log("❌ Required data not found. Run customer,warehouse and order status seeders first.");
-    return;
-  }
+    if (customers.length === 0 || orderStatuses.length === 0 || warehouses.length === 0) {
+      console.log("❌ Required data not found. Run customer, warehouse and order status seeders first.");
+      return;
+    }
 
-  return new Promise((resolve, reject) => {
-    const csvPath = path.join(__dirname, '../data/orders.csv');
+    const csvPath = path.join(__dirname, "../data/orders.csv");
     const rows: any[] = [];
-    
-    fs.createReadStream(csvPath)
-      .pipe(csv())
-      .on('data', (row) => {
-        rows.push(row);
-      })
-      .on('end', async () => {
-        let count = 0;
-        try {
-          for (const row of rows) {
-            const customer = customers[parseInt(row.customer_index)];
-            const orderStatus = orderStatuses.find(os => os.name === row.order_status);
-            const warehouse = warehouses[parseInt(row.warehouse_index)]
-            
-            if (!customer || !orderStatus || !warehouse) continue;
 
-            const orderData: CreateOrderDTO = {
-              customer_id: customer.id_customer,
-              order_status_id: orderStatus.id_order_status,
-              warehouse_id: warehouse.id_warehouse,
-              is_active: true
-            };
+    // Load CSV data
+    await new Promise<void>((resolve, reject) => {
+      fs.createReadStream(csvPath)
+        .pipe(csv())
+        .on("data", (row) => rows.push(row))
+        .on("end", resolve)
+        .on("error", reject);
+    });
 
-            try {
-              await createOrder(orderData);
-              count++;
-              if (count % 50 === 0) {
-                console.log(`✓ Orders created: ${count}`);
-              }
-            } catch (error: any) {
-              if (!error.message?.includes('unique constraint')) {
-                console.error(`Error creating order:`, error.message);
-              }
-            }
-          }
-          console.log(`✅ ${count} orders processed from CSV`);
-          resolve();
-        } catch (error) {
-          reject(error);
+    let count = 0;
+
+    // Process each order row
+    for (const row of rows) {
+      const customer = customers[parseInt(row.customer_id)];
+      const orderStatus = orderStatuses.find((os) => os.id_order_status === parseInt(row.order_status_id));
+      const warehouse = warehouses[parseInt(row.warehouse_id)];
+
+      if (!customer || !orderStatus || !warehouse) continue;
+
+      const orderData: CreateOrderDTO = {
+        customer_id: customer.id_customer,
+        order_status_id: orderStatus.id_order_status,
+        warehouse_id: warehouse.id_warehouse,
+        is_active: row.is_active === "true",
+      };
+
+      try {
+        await createOrder(orderData);
+        count++;
+      } catch (error: any) {
+        if (!error.message?.includes("unique constraint")) {
+          console.error(`Error creating order for customer ${customer.id_customer}:`, error.message);
         }
-      })
-      .on('error', reject);
-  });
+      }
+    }
+
+    console.log(`✅ ${count} orders processed from CSV`);
+  } catch (error) {
+    console.error("❌ Failed to run order seed:", error);
+  }
 };

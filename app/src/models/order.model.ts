@@ -1,5 +1,3 @@
-// app/src/models/order.model.ts
-
 /**
  * Order Model
  * -----------------
@@ -86,7 +84,7 @@ Order.init(
       allowNull: false,
       references:{
         model: "warehouses",
-        key: "id_warehouses",
+        key: "id_warehouse",
       }
     },
     is_active: {

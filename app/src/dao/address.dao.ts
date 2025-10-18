@@ -5,6 +5,7 @@ import {
   UpdateAddressDTO,
 } from "../dto/address.dto";
 
+
 export const getAddresses = async (): Promise<AddressDTO[]> => {
   return await Address.findAll({ where: { is_active: true } });
 };

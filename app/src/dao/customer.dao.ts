@@ -5,6 +5,7 @@ import {
   UpdateCustomerDTO,
 } from "../dto/customer.dto";
 
+
 export const getCustomers = async (): Promise<CustomerDTO[]> => {
   return await Customer.findAll({ where: { is_active: true } });
 };

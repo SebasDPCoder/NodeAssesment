@@ -31,7 +31,7 @@ Swagger	Interactive API documentation
 Class Validator	Validation of DTOs in requests
 Bcrypt	Password encryption
 # ⚙️ Main Features
-✅ Authentication & Roles
+### ✅ Authentication & Roles
 
 User registration and login with admin or analyst roles.
 
@@ -39,7 +39,7 @@ Route protection using JWT.
 
 Middleware for role-based authorization.
 
-✅ Client Management
+### ✅ Client Management
 
 Full CRUD for clients.
 
@@ -47,7 +47,7 @@ Search clients by ID number.
 
 Validation to prevent duplicates.
 
-✅ Warehouse Management
+### ✅ Warehouse Management
 
 List of active warehouses.
 
@@ -55,7 +55,7 @@ Activate or deactivate existing warehouses.
 
 View available stock.
 
-✅ Product Management
+### ✅ Product Management
 
 Fetch product by code.
 
@@ -63,7 +63,7 @@ Logical (soft) deletion of products.
 
 Stock control and quantity validation.
 
-✅ Order Management
+### ✅ Order Management
 
 Create orders linked to client, warehouse, and products.
 
@@ -74,49 +74,13 @@ Full order history per client.
 Automatic stock validation before creating orders.
 
 # 🧩 Project Structure
-<pre>
-├── app
-│   ├── src
-│   │   ├── app.ts
-│   │   ├── config
-│   │   ├── controllers
-│   │   ├── dao
-│   │   ├── data
-│   │   ├── docs
-│   │   ├── dto
-│   │   ├── middleware
-│   │   ├── models
-│   │   ├── routes
-│   │   ├── seeders
-│   │   ├── server.ts
-│   │   ├── types
-│   │   └── utils
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── package-lock.json
-│   └── tsconfig.json
-├── docker-compose.yml
-└── README.md
-</pre>
-# 🐳 Run with Docker Compose
-
-## 1️⃣ Prerequisites
-
-Install Docker Desktop or Docker Engine + Docker Compose v2
-
-Clone the repository:
 
 git clone https://github.com/https://github.com/SebasDPCoder/NodeAssesment.git
 
 
 ## 2️⃣ Configure Environment Variables
 
-Create a .env file in the project root with the following content:
-
-### Server
-PORT=3000
-NODE_ENV=development
-JWT_SECRET=supersecretkey
+Create a .env file in the project root with the following example:
 
 ### Database
 DB_HOST=db
@@ -129,11 +93,13 @@ DB_PASSWORD=postgres
 docker-compose up --build
 
 
+
 This will start the following services:
 
 app → Express API (port 3000)
 
 db → PostgreSQL database (port 5432)
+
 
 ## 4️⃣ Check Status
 
@@ -141,7 +107,8 @@ API: http://localhost:3000/api
 
 PostgreSQL: localhost:5432 (user: postgres, password: postgres)
 
-🌱 Populate Database (Seeders)
+
+## 🌱 Populate Database (Seeders)
 
 To load initial data (users, clients, warehouses, products):
 
@@ -161,7 +128,9 @@ You’ll receive a JWT token to include in the request header:
 Authorization: Bearer <token>
 
 # 📚 Main Endpoints
+
 ## 👤 Users
+
 
 POST /api/auth/register → Create user (Admin or Analyst)
 
@@ -208,9 +177,10 @@ GET /api/orders/history/:customerId → Get client order history
 👩‍💻 Analyst → Read-only + order status updates.
 
 
+
 ##  👨‍💻 Author
 
-Developed by Sebastian
-Clan: Tayrona
+**Clan:** Tayrona
 
 🚀 Be a Coder.
+

@@ -34,7 +34,7 @@ const router = Router();
  *             example:
  *               error: "Failed to retrieve order status."
  */
-router.get("/", authMiddleware(),requireRoleByName('Admin','Seller'),getOrderStatus);
+router.get("/", authMiddleware(),requireRoleByName('Admin','Analyst'),getOrderStatus);
 
 /**
  * @swagger
@@ -77,6 +77,6 @@ router.get("/", authMiddleware(),requireRoleByName('Admin','Seller'),getOrderSta
  *             example:
  *               error: "Failed to retrieve order status."
  */
-router.get("/:id", authMiddleware(),requireRoleByName('Admin','Seller'),getOrderStatusById);
+router.get("/:id", authMiddleware(),requireRoleByName('Admin','Analyst'),getOrderStatusById);
 
 export default router;

@@ -18,7 +18,7 @@ const router = Router();
  * @swagger
  * /auth/register:
  *   post:
- *     summary: Register a new seller
+ *     summary: Register a new user
  *     tags: [Authentication]
  *     security: []
  *     requestBody:
@@ -29,7 +29,7 @@ const router = Router();
  *             $ref: '#/components/schemas/RegisterDto'
  *     responses:
  *       201:
- *         description: Seller registered successfully
+ *         description: User registered successfully
  *         content:
  *           application/json:
  *             schema:
@@ -46,7 +46,7 @@ const router = Router();
  *               errors:
  *                 email: "Email is required"
  *       409:
- *         description: Seller or email already exists
+ *         description: User or email already exists
  *         content:
  *           application/json:
  *             schema:

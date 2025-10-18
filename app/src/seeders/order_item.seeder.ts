@@ -1,5 +1,3 @@
-// app/src/seeders/12-order_item.seeder.ts
-
 /**
  * Order Item Seeder
  * -----------------
@@ -22,63 +20,61 @@ import csv from 'csv-parser';
 import path from 'path';
 
 /**
- * Seeds the order item table with initial order-product relationships.
+ * Seeds the `order_items` table with initial data.
  * 
- * Creates sample order items if they don't already exist.
- * Prevents duplicate entries by checking existing records.
+ * Loads order item data from a CSV file and creates records
+ * if the corresponding order and product exist.
+ * Prevents duplicates and handles unique constraint errors gracefully.
  */
 export const seedOrderItems = async (): Promise<void> => {
-  const orders = await Order.findAll();
-  const products = await Product.findAll();
+  try {
+    const orders = await Order.findAll();
+    const products = await Product.findAll();
 
-  if (orders.length === 0 || products.length === 0) {
-    console.log("❌ Orders or products not found. Run orders and products seeders first.");
-    return;
-  }
+    if (orders.length === 0 || products.length === 0) {
+      console.log("❌ Orders or products not found. Run those seeders first.");
+      return;
+    }
 
-  return new Promise((resolve, reject) => {
-    const csvPath = path.join(__dirname, '../data/order_items.csv');
+    const csvPath = path.join(__dirname, "../data/order_items.csv");
     const rows: any[] = [];
-    
-    fs.createReadStream(csvPath)
-      .pipe(csv())
-      .on('data', (row) => {
-        rows.push(row);
-      })
-      .on('end', async () => {
-        let count = 0;
-        try {
-          for (const row of rows) {
-            const order = orders[parseInt(row.order_index)];
-            const product = products[parseInt(row.product_index)];
-            
-            if (!order || !product) continue;
 
-            const orderItemData: CreateOrderItemDTO = {
-              order_id: order.id_order,
-              product_id: product.id_product,
-              quantity: row.quantity,
-              is_active: row.is_active === "true",
-            };
+    // Load CSV data
+    await new Promise<void>((resolve, reject) => {
+      fs.createReadStream(csvPath)
+        .pipe(csv())
+        .on("data", (row) => rows.push(row))
+        .on("end", resolve)
+        .on("error", reject);
+    });
 
-            try {
-              await createOrderItem(orderItemData);
-              count++;
-              if (count % 100 === 0) {
-                console.log(`✓ Order Items created: ${count}`);
-              }
-            } catch (error: any) {
-              if (!error.message?.includes('unique constraint')) {
-                console.error(`Error creating order item:`, error.message);
-              }
-            }
-          }
-          console.log(`✅ ${count} order items processed from CSV`);
-          resolve();
-        } catch (error) {
-          reject(error);
+    let count = 0;
+
+    // Process each row
+    for (const row of rows) {
+      const order = orders[parseInt(row.order_id)];
+      const product = products[parseInt(row.product_id)];
+
+      if (!order || !product) continue;
+
+      const orderItemData: CreateOrderItemDTO = {
+        order_id: order.id_order,
+        product_id: product.id_product,
+        quantity: parseInt(row.quantity),
+        is_active: row.is_active === "true",
+      };
+
+      try {
+        await createOrderItem(orderItemData);
+        count++;
+      } catch (error: any) {
+        if (!error.message?.includes("unique constraint")) {
+          console.error(`Error creating order item for order ${order.id_order}:`, error.message);
         }
-      })
-      .on('error', reject);
-  });
+      }
+    }
+    console.log(`✅ ${count} order items processed from CSV`);
+  } catch (error) {
+    console.error("❌ Failed to run order items seed:", error);
+  }
 };

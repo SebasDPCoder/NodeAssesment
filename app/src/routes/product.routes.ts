@@ -3,39 +3,26 @@
 /**
  * Product Routes
  * --------------
- * This file defines the HTTP routes related to the `Product` entity.
- * 
- * Available Endpoints:
- *  - `POST /products/` : Create a new product.
- *  - `GET /products/`  : Get all registered products.
- *  - `GET /products/:id_product` : Get a product by its ID.
- *  - `PUT /products/:id_product` : Update a product by its ID.
- *  - `DELETE /products/:id_product` : Soft delete a product by its ID.
- * 
- * Each route is connected to its respective controller.
+ * This file defines all HTTP routes for managing products.
+ *
+ * Updated:
+ *  - Routes now use the `code` (string) field instead of numeric `id_product`.
  */
 
 import { Router } from "express";
-import { createProduct, getProducts, getProductById, updateProduct, softDeleteProduct } from "../controllers/product.controller";
+import {
+  createProduct,
+  getProducts,
+  getProductByCode,
+  updateProduct,
+  softDeleteProduct,
+} from "../controllers/product.controller";
+import { authMiddleware } from "../middleware/auth.midleware";
+import { requireRoleByName } from "../middleware/rbac.guard";
 
 const router = Router();
-
+// --- POST ---
 /**
- * POST /
- * -----
- * Creates a new product in the database.
- * 
- * Request Body:
- *  - `category_id`: number (required)
- *  - `name`: string (required)
- *  - `price`: number (required)
- *  - `description`: string (optional)
- *  - `stock`: number (required)
- * 
- * Response:
- *  - 201 Created: Returns the created product in JSON format.
- *  - 500 Internal Server Error: If an error occurs during creation.
- * 
  * @swagger
  * /products:
  *   post:
@@ -46,68 +33,62 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - category_id
- *               - name
- *               - price
- *               - stock
- *             properties:
- *               category_id:
- *                 type: number
- *                 example: 2
- *               name:
- *                 type: string
- *                 example: "Apple"
- *               price:
- *                 type: number
- *                 example: 1.5
- *               description:
- *                 type: string
- *                 example: "Fresh red apple"
- *               stock:
- *                 type: number
- *                 example: 100
+ *             $ref: '#/components/schemas/CreateProductDto'
+ *           example:
+ *             code: "APL-001"
+ *             name: "Apple"
+ *             description: "Fresh red apple"
+ *             price: 1.5
+ *             stock: 100
  *     responses:
  *       201:
  *         description: Product created successfully
  *         content:
  *           application/json:
  *             example:
- *               id: 3
- *               category_id: 2
- *               name: "Apple"
- *               price: 1.5
- *               description: "Fresh red apple"
- *               stock: 100
- *               is_active: true
+ *               success: true
+ *               message: "Product created successfully"
+ *               data:
+ *                 id_product: 1
+ *                 code: "APL-001"
+ *                 name: "Apple"
+ *                 description: "Fresh red apple"
+ *                 price: 1.5
+ *                 stock: 100
+ *                 is_active: true
  *       400:
- *         description: Invalid input data
+ *         description: Validation error
  *         content:
  *           application/json:
  *             example:
- *               error: "Invalid input data"
+ *               success: false
+ *               message: "Validation error"
+ *               errors:
+ *                 name: "Product name is required"
+ *       409:
+ *         description: Product already exists
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Product with code 'APL-001' already exists"
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
  *             example:
- *               error: "Failed to create product"
+ *               success: false
+ *               message: "Internal server error during creation"
  */
-router.post("/", createProduct);
+router.post("/", authMiddleware(), requireRoleByName('Admin'), createProduct);
 
+
+// --- GET all ---
 /**
- * GET /
- * ----
- * Retrieves the complete list of products from the database.
- * 
- * Response:
- *  - 200 OK: Returns an array of products in JSON format.
- * 
  * @swagger
  * /products:
  *   get:
- *     summary: Get all products
+ *     summary: Get all products (active and inactive)
  *     tags: [Products]
  *     responses:
  *       200:
@@ -115,175 +96,184 @@ router.post("/", createProduct);
  *         content:
  *           application/json:
  *             example:
- *               - id: 1
- *                 category_id: 2
- *                 name: "Apple"
- *                 price: 1.5
- *                 description: "Fresh red apple"
- *                 stock: 100
- *                 is_active: true
+ *               success: true
+ *               message: "Products retrieved successfully"
+ *               data:
+ *                 - id_product: 1
+ *                   code: "APL-001"
+ *                   name: "Apple"
+ *                   description: "Fresh red apple"
+ *                   price: 1.5
+ *                   stock: 100
+ *                   is_active: true
+ *                 - id_product: 2
+ *                   code: "BAN-002"
+ *                   name: "Banana"
+ *                   description: "Ripe yellow banana"
+ *                   price: 1.0
+ *                   stock: 80
+ *                   is_active: false
  *       500:
- *         description: Internal server error
+ *         description: Failed to retrieve products
  *         content:
  *           application/json:
  *             example:
- *               error: "Failed to retrieve products"
+ *               success: false
+ *               message: "Internal server error while retrieving products"
  */
-router.get("/", getProducts);
+router.get("/", authMiddleware(), requireRoleByName('Admin', 'Analyst'), getProducts);
 
+
+// --- GET by CODE ---
 /**
- * GET /:id_product
- * ----------------
- * Retrieves a single product by its ID.
- * 
- * Response:
- *  - 200 OK: Returns the product in JSON format.
- *  - 404 Not Found: If the product does not exist.
- * 
  * @swagger
- * /products/{id_product}:
+ * /products/code/{code}:
  *   get:
- *     summary: Get a product by ID
+ *     summary: Get a product by its unique code
  *     tags: [Products]
  *     parameters:
  *       - in: path
- *         name: id_product
- *         required: true
+ *         name: code
  *         schema:
- *           type: integer
- *         description: The product ID
+ *           type: string
+ *         required: true
+ *         description: Product code
  *     responses:
  *       200:
- *         description: Product retrieved successfully
+ *         description: Product found successfully
  *         content:
  *           application/json:
  *             example:
- *               id: 1
- *               category_id: 2
- *               name: "Apple"
- *               price: 1.5
- *               description: "Fresh red apple"
- *               stock: 100
- *               is_active: true
+ *               success: true
+ *               message: "Product retrieved successfully"
+ *               data:
+ *                 id_product: 1
+ *                 code: "APL-001"
+ *                 name: "Apple"
+ *                 description: "Fresh red apple"
+ *                 price: 1.5
+ *                 stock: 100
+ *                 is_active: true
+ *       400:
+ *         description: Invalid product code
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Product code must be a string"
  *       404:
  *         description: Product not found
  *         content:
  *           application/json:
  *             example:
- *               error: "Product not found"
+ *               success: false
+ *               message: "Product with code 'XYZ-999' not found"
  *       500:
- *         description: Internal server error
+ *         description: Failed to retrieve product
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Internal server error while retrieving product"
  */
-router.get("/:id_product", getProductById);
+router.get("/code/:code", authMiddleware(), requireRoleByName('Admin', 'Analyst'), getProductByCode);
 
+
+// --- UPDATE ---
 /**
- * PUT /:id_product
- * ----------------
- * Updates a product by its ID.
- * 
- * Request Body:
- *  - `category_id`: number (optional)
- *  - `name`: string (optional)
- *  - `price`: number (optional)
- *  - `description`: string (optional)
- *  - `stock`: number (optional)
- * 
- * Response:
- *  - 200 OK: Returns the updated product.
- *  - 404 Not Found: If the product does not exist.
- * 
  * @swagger
- * /products/{id_product}:
+ * /products/code/{code}:
  *   put:
- *     summary: Update a product by ID
+ *     summary: Update a product by its code
  *     tags: [Products]
  *     parameters:
  *       - in: path
- *         name: id_product
- *         required: true
+ *         name: code
  *         schema:
- *           type: integer
- *         description: The product ID
+ *           type: string
+ *         required: true
+ *         description: Product code
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: "Updated Apple"
- *               price:
- *                 type: number
- *                 example: 2.0
- *               description:
- *                 type: string
- *                 example: "Updated description"
- *               stock:
- *                 type: number
- *                 example: 150
+ *             $ref: '#/components/schemas/UpdateProductDto'
+ *           example:
+ *             name: "Green Apple"
+ *             price: 2.0
+ *             stock: 150
  *     responses:
  *       200:
  *         description: Product updated successfully
  *         content:
  *           application/json:
  *             example:
- *               id: 1
- *               category_id: 2
- *               name: "Updated Apple"
- *               price: 2.0
- *               description: "Updated description"
- *               stock: 150
- *               is_active: true
+ *               success: true
+ *               message: "Product updated successfully"
+ *               data:
+ *                 code: "APL-001"
+ *                 name: "Green Apple"
+ *                 price: 2.0
+ *                 stock: 150
+ *                 is_active: true
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Invalid price value"
  *       404:
  *         description: Product not found
  *         content:
  *           application/json:
  *             example:
- *               error: "Product not found"
+ *               success: false
+ *               message: "Product with code 'APL-001' not found"
  *       500:
- *         description: Internal server error
+ *         description: Failed to update product
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Internal server error while updating product"
  */
-router.put("/:id_product", updateProduct);
+router.put("/code/:code", authMiddleware(), requireRoleByName('Admin'), updateProduct);
 
+
+// --- DELETE ---
 /**
- * DELETE /:id_product
- * -------------------
- * Soft deletes a product by its ID (marks it as inactive instead of deleting it permanently).
- * 
- * Response:
- *  - 200 OK: Returns a success message.
- *  - 404 Not Found: If the product does not exist.
- * 
  * @swagger
- * /products/{id_product}:
+ * /products/code/{code}:
  *   delete:
- *     summary: Soft delete a product by ID
+ *     summary: Soft delete a product (set is_active=false)
  *     tags: [Products]
  *     parameters:
  *       - in: path
- *         name: id_product
- *         required: true
+ *         name: code
  *         schema:
- *           type: integer
- *         description: The product ID
+ *           type: string
+ *         required: true
+ *         description: Product code
  *     responses:
- *       200:
- *         description: Product soft deleted successfully
- *         content:
- *           application/json:
- *             example:
- *               message: "Product soft deleted successfully"
+ *       204:
+ *         description: Product soft-deleted successfully
  *       404:
- *         description: Product not found
+ *         description: Product not found or already inactive
  *         content:
  *           application/json:
  *             example:
- *               error: "Product not found"
+ *               success: false
+ *               message: "Product with code 'APL-001' not found or already inactive"
  *       500:
- *         description: Internal server error
+ *         description: Failed to soft delete product
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Internal server error while deleting product"
  */
-router.delete("/:id_product", softDeleteProduct);
+router.delete("/code/:code", authMiddleware(), requireRoleByName('Admin'), softDeleteProduct);
 
 export default router;

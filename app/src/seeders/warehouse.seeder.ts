@@ -10,41 +10,48 @@ import fs from "fs";
 import csv from "csv-parser";
 import path from "path";
 
+/**
+ * Seeds the `warehouses` table with initial warehouse data.
+ *
+ * Loads warehouse data from `warehouses.csv` and inserts unique records.
+ * Prevents duplicates by handling constraint errors.
+ */
 export const seedWarehouses = async (): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  try {
     const csvPath = path.join(__dirname, "../data/warehouses.csv");
     const rows: any[] = [];
 
-    fs.createReadStream(csvPath)
-      .pipe(csv())
-      .on("data", (row) => rows.push(row))
-      .on("end", async () => {
-        let count = 0;
-        try {
-          for (const row of rows) {
-            const warehouseData: CreateWarehouseDTO = {
-              name: `${row.name} ${Math.random().toString(36).substr(2, 4).toUpperCase()}`, // unique
-              location: row.location || "",
-              is_active: true,
-            };
+    // Load CSV data
+    await new Promise<void>((resolve, reject) => {
+      fs.createReadStream(csvPath)
+        .pipe(csv())
+        .on("data", (row) => rows.push(row))
+        .on("end", resolve)
+        .on("error", reject);
+    });
 
-            try {
-              await createWarehouse(warehouseData);
-              count++;
-              if (count % 50 === 0) console.log(`✓ Warehouses created: ${count}`);
-            } catch (error: any) {
-              if (!error.message?.includes("unique constraint")) {
-                console.error(`Error creating warehouse ${row.name}:`, error.message);
-              }
-            }
-          }
+    let count = 0;
 
-          console.log(`✅ ${count} warehouses processed from CSV`);
-          resolve();
-        } catch (error) {
-          reject(error);
+    // Process rows
+    for (const row of rows) {
+      const warehouseData: CreateWarehouseDTO = {
+        name: `${row.name} ${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
+        location: row.location || "",
+        is_active: row.is_active === "true",
+      };
+
+      try {
+        await createWarehouse(warehouseData);
+        count++;
+      } catch (error: any) {
+        if (!error.message?.includes("unique constraint")) {
+          console.error(`Error creating warehouse ${row.name}:`, error.message);
         }
-      })
-      .on("error", reject);
-  });
+      }
+    }
+
+    console.log(`✅ ${count} warehouses processed from CSV`);
+  } catch (error) {
+    console.error("❌ Failed to run warehouse seed:", error);
+  }
 };
