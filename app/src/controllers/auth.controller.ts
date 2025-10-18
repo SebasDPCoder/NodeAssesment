@@ -15,12 +15,11 @@
 
 import { Request, Response } from "express";
 import * as userDao from "../dao/user.dao"
-import { findByDocument } from "../dao/access.dao";
-import { hashPassword, comparePassword, validatePasswordStrength } from "../utils/password.util";
+import { findByDocument } from "../dao/user.dao";
+import { hashPassword, comparePassword } from "../utils/password.util";
 import { generateToken, verifyToken, extractTokenFromHeader } from "../utils/jwt.util";
 import { validateRegisterData, validateLoginFields } from "../utils/validation.util";
 import { AuthResponseDto, ErrorResponseDto, RegisterDto, LoginDto } from "../dto/auth.dto";
-import Access from "../models/access.model";
 import { AccessWithUser } from "../types/accessWithUser";
 
 
@@ -46,7 +45,7 @@ function buildAuthResponse({ user, access }: { user: any; access: any }, message
     user: ({
       id_user: userAny.id_user,
       document: accessAny.document,
-      fullname: userAny.fullname,
+      full_name: userAny.full_name,
       email: userAny.email,
       role: accessAny.role ? {
         id_role: accessAny.role.id_role,
@@ -85,16 +84,6 @@ export const register = async (req: Request, res: Response): Promise<Response> =
       return res.status(409).json({ success: false, message: 'Email is already registered' } as ErrorResponseDto);
     }
 
-    // Validate password strength
-    const passwordValidation = validatePasswordStrength(registerData.password);
-    if (!passwordValidation.isValid) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password does not meet security requirements',
-        errors: { password: passwordValidation.errors.join('; ') }
-      } as ErrorResponseDto);
-    }
-
     // Create access and user
     const hashedPassword = await hashPassword(registerData.password);
     const { user, access } = await userDao.createUserWithAccess(registerData, hashedPassword);
@@ -105,7 +94,7 @@ export const register = async (req: Request, res: Response): Promise<Response> =
       message: 'User registered successfully',
       user: {
         id_user: userAny.id_user,
-        document: accessAny.document,
+        document: userAny.document,
         full_name: userAny.full_name,
         email: userAny.email,
         role: accessAny.role ? {
@@ -139,18 +128,18 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     const validationError: any = validateLoginFields(loginData);
     if (validationError) return res.status(400).json(validationError as ErrorResponseDto);
 
-    const access = await findByDocument(loginData.document) as AccessWithUser;
-    if (!access || !access.user) {
-      return res.status(401).json({ success: false, message: 'Invalid credentials' } as ErrorResponseDto);
+    const user = await findByDocument(loginData.document) as AccessWithUser;
+    if (!user || !user.access) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials cachon' } as ErrorResponseDto);
     }
-    if (!access.is_active) {
+    if (!user.is_active) {
       return res.status(403).json({ success: false, message: 'Account is deactivated' } as ErrorResponseDto);
     }
-    const isPasswordValid = await comparePassword(loginData.password, access.password);
+    const isPasswordValid = await comparePassword(loginData.password, user.access.password);
     if (!isPasswordValid) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' } as ErrorResponseDto);
     }
-    return res.status(200).json(buildAuthResponse({ user: access.user, access }, 'Login successful'));
+    return res.status(200).json(buildAuthResponse({ user: user, access: user.access }, 'Login successful'));
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json({

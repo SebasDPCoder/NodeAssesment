@@ -11,45 +11,52 @@ import fs from "fs";
 import csv from "csv-parser";
 import path from "path";
 
+/**
+ * Seeds the `warehouse_products` table with inventory links.
+ *
+ * Loads data from `warehouse_products.csv` and creates records
+ * linking products to warehouses.
+ */
 export const seedWarehouseProducts = async (): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    const csvPath = path.join(__dirname, "../data/warehouse_products.csv");
+  try {
+    const csvPath = path.join(__dirname, "../data/warehouses_product.csv");
     const rows: any[] = [];
 
-    fs.createReadStream(csvPath)
-      .pipe(csv())
-      .on("data", (row) => rows.push(row))
-      .on("end", async () => {
-        let count = 0;
-        try {
-          for (const row of rows) {
-            const wpData: CreateWarehouseProductDTO = {
-              warehouse_id: parseInt(row.warehouse_id),
-              product_id: parseInt(row.product_id),
-              stock_quantity: parseInt(row.quantity) || 0,
-              is_active: true
-            };
+    // Load CSV data
+    await new Promise<void>((resolve, reject) => {
+      fs.createReadStream(csvPath)
+        .pipe(csv())
+        .on("data", (row) => rows.push(row))
+        .on("end", resolve)
+        .on("error", reject);
+    });
 
-            try {
-              await createWarehouseProduct(wpData);
-              count++;
-              if (count % 50 === 0) console.log(`✓ WarehouseProducts created: ${count}`);
-            } catch (error: any) {
-              if (!error.message?.includes("unique constraint")) {
-                console.error(
-                  `Error linking product ${row.product_id} to warehouse ${row.warehouse_id}:`,
-                  error.message
-                );
-              }
-            }
-          }
+    let count = 0;
 
-          console.log(`✅ ${count} warehouse_products processed from CSV`);
-          resolve();
-        } catch (error) {
-          reject(error);
+    // Process rows
+    for (const row of rows) {
+      const wpData: CreateWarehouseProductDTO = {
+        warehouse_id: parseInt(row.warehouse_id),
+        product_id: parseInt(row.product_id),
+        stock_quantity: parseInt(row.quantity) || 0,
+        is_active: row.is_active === "true",
+      };
+
+      try {
+        await createWarehouseProduct(wpData);
+        count++;
+      } catch (error: any) {
+        if (!error.message?.includes("unique constraint")) {
+          console.error(
+            `Error linking product ${row.product_id} to warehouse ${row.warehouse_id}:`,
+            error.message
+          );
         }
-      })
-      .on("error", reject);
-  });
+      }
+    }
+
+    console.log(`✅ ${count} warehouse_products processed from CSV`);
+  } catch (error) {
+    console.error("❌ Failed to run warehouse_products seed:", error);
+  }
 };

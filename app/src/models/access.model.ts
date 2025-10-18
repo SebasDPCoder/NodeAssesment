@@ -19,7 +19,7 @@ import sequelize from "../config/database";
 export interface AccessAttributes {
     id_access: number;
     role_id: number;
-    document: string;
+    user_id: number;
     password: string;
     is_active: boolean;
 }
@@ -38,7 +38,7 @@ export interface AccessCreationAttributes extends Optional<AccessAttributes, "id
 class Access extends Model<AccessAttributes, AccessCreationAttributes> implements AccessAttributes {
     public id_access!: number;
     public role_id!: number;
-    public document!: string;
+    public user_id!: number;
     public password!: string;
     public is_active!: boolean;
 }
@@ -67,10 +67,13 @@ Access.init(
                 key: "id_role",
             },
         },
-        document: {
-            type: DataTypes.STRING(20),
-            unique: true,
+        user_id: {
+            type: DataTypes.INTEGER,
             allowNull: false,
+            references: {
+                model: "users",
+                key: "id_user",
+            },
         },
         password: {
             type: DataTypes.STRING(255),

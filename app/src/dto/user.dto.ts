@@ -1,7 +1,7 @@
 // Represents a user entity
 export interface UserDTO {
   id_user?: number;
-  access_id: number;
+  document: string;
   full_name: string;
   email: string;
   is_active: boolean,
@@ -11,7 +11,7 @@ export interface UserDTO {
 
 // For creating a new user
 export interface CreateUserDTO {
-  access_id: number;
+  document: string;
   full_name: string;
   email: string;
   is_active: boolean;
@@ -19,7 +19,7 @@ export interface CreateUserDTO {
 
 // For updating user data
 export interface UpdateUserDTO {
-  access_id?: number;
+  document?: string;
   full_name?: string;
   email?: string;
   is_active?: boolean;

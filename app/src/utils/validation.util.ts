@@ -53,8 +53,8 @@ export const validateRegisterData = (registerData: RegisterDto): LocalErrorRespo
   if (!registerData.password) {
     errors.password = 'Password is required';
   }
-  if (!registerData.fullname) {
-    errors.fullname = 'Full name is required';
+  if (!registerData.full_name) {
+    errors.full_name = 'Full name is required';
   }
   if (!registerData.email) {
     errors.email = 'Email is required';

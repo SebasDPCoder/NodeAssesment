@@ -1,5 +1,3 @@
-// app/src/seeders/06-address.seeder.ts
-
 /**
  * Address Seeder
  * -----------------
@@ -25,38 +23,36 @@ import path from 'path';
  * Prevents duplicate entries by checking existing records.
  */
 export const seedAddresses = async (): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  try {
     const csvPath = path.join(__dirname, '../data/address.csv');
+    const rows: any[] = []
+
+    await new Promise((resolve, reject) => {
+      fs.createReadStream(csvPath)
+        .pipe(csv())
+        .on('data', (row) => rows.push(row))
+        .on('end', resolve)
+        .on('error', reject);
+    });
     let count = 0;
-    
-    fs.createReadStream(csvPath)
-      .pipe(csv())
-      .on('data', async (row) => {
-        const existing = await Address.findOne({ 
-          where: { 
-            street: row.street, 
-            number: row.number,
-            city: row.city 
-          } 
+
+    for (const row of rows) {
+      const existing = await Address.findOne({ where: { street: row.street, number: row.number, city: row.city } });
+      if (!existing) {
+        await Address.create({
+          country: row.country,
+          city: row.city,
+          department: row.department,
+          street: row.street,
+          number: row.number,
+          postal_code: row.postal_code,
+          is_active: row.is_active === 'true'
         });
-        if (!existing) {
-          await Address.create({
-            country: row.country,
-            city: row.city,
-            department: row.department,
-            street: row.street,
-            number: row.number,
-            postal_code: row.postal_code,
-            is_active: row.is_active === 'true'
-          });
-          count++;
-          console.log(`✓ Address created: ${row.street} ${row.number}, ${row.city}`);
-        }
-      })
-      .on('end', () => {
-        console.log(`✅ ${count} addresses processed from CSV`);
-        resolve();
-      })
-      .on('error', reject);
-  });
+        count++;
+      }
+    }
+    console.log(`✅ ${count} addresses processed from CSV`);
+  } catch (error) {
+    console.error("Failed to run address seed:"+ error);
+  }
 };

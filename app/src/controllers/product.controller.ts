@@ -1,4 +1,3 @@
-// app/src/controllers/product.controller.ts
 
 /**
  * Product Controller
@@ -10,12 +9,6 @@
  *  - DTO (Data Transfer Object): To type input data.
  *  - DAO (Data Access Object): To abstract database interaction.
  *
- * Defined controllers:
- *  - createProduct: Creates a new product in the database.
- *  - getProducts: Retrieves the list of all products.
- *  - getProductByCode: Retrieves a product by its unique code.
- *  - updateProduct: Updates an existing product.
- *  - softDeleteProduct: Performs a soft delete of a product.
  */
 
 import { Request, Response } from "express";

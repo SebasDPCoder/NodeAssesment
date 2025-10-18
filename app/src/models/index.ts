@@ -28,6 +28,11 @@ import Product from "./product.model";
 import User from "./user.model";
 import WarehouseProduct from "./warehouse_product.model";
 
+// 👇 Importa la función de asociaciones
+import { applyAssociations } from "./associations";
+
+// ✅ Aplica las asociaciones usando los modelos ya importados
+applyAssociations();
 /**
  * Synchronize database schema.
  * -----------------

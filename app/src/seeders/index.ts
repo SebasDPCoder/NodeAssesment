@@ -34,12 +34,12 @@ export const runAllSeeders = async () => {
     await seedWarehouses();
     await seedOrderStatus();
     await seedAddresses();
-
+    await seedUsers(); 
+    
     // Dependent entities
     await seedAccesses(); // depends on roles
     await seedProducts(); // depends on categories
     await seedCustomers(); // depends on addresses
-    await seedUsers(); // depends on access
     await seedOrders(); // depends on customers, order statuses
     await seedOrderItems(); // depends on orders and products
     await seedWarehouseProducts(); // depends on warehouses and products

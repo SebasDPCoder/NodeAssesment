@@ -1,5 +1,3 @@
-// app/src/seeders/07-access.seeder.ts
-
 /**
  * Access Seeder
  * -----------------
@@ -26,56 +24,53 @@ import bcrypt from 'bcrypt';
  * 
  * Creates admin and seller accounts if they don't already exist.
  * Prevents duplicate entries by checking existing records.
- */
+*/
 export const seedAccesses = async (): Promise<void> => {
-  const roles = await Role.findAll();
-  
-  if (roles.length === 0) {
-    console.log("❌ Roles not found. Run role seeder first.");
-    return;
-  }
-
-  return new Promise((resolve, reject) => {
+  try {
     const csvPath = path.join(__dirname, '../data/access.csv');
     const rows: any[] = [];
-    
-    fs.createReadStream(csvPath)
-      .pipe(csv())
-      .on('data', (row) => {
-        rows.push(row);
-      })
-      .on('end', async () => {
-        let count = 0;
-        try {
-          for (const row of rows) {
-            const role = roles.find(r => r.name === row.role);
-            if (!role) continue;
+    const roles = await Role.findAll();
 
-            const hashedPassword = await bcrypt.hash(row.password, 10);
-            
-            const accessData: CreateAccessDTO = {
-              role_id: role.id_role,
-              document: row.document,
-              password: hashedPassword,
-              is_active: row.is_active === 'true'
-            };
+    if (roles.length === 0) {
+      console.log("❌ Roles not found. Run role seeder first.");
+      return;
+    }
+    await new Promise((resolve, reject) => {
 
-            try {
-              await createAccess(accessData);
-              count++;
-              console.log(`✓ Access created: ${row.document}`);
-            } catch (error: any) {
-              if (!error.message?.includes('unique constraint')) {
-                console.error(`Error creating access ${row.document}:`, error.message);
-              }
-            }
-          }
-          console.log(`✅ ${count} accesses processed from CSV`);
-          resolve();
-        } catch (error) {
-          reject(error);
+      fs.createReadStream(csvPath)
+        .pipe(csv())
+        .on('data', (row) => rows.push(row))
+        .on('end', resolve)
+        .on('error', reject);
+    });
+
+    let count = 0;
+    for (const row of rows) {   
+      const role = roles.find(r => r.id_role === parseInt(row.role_id));
+      if (!role) continue;
+
+      const hashedPassword = await bcrypt.hash(row.password, 10);
+      
+      const accessData: CreateAccessDTO = {
+        role_id: role.id_role,
+        user_id: row.user_id,
+        password: hashedPassword,
+        is_active: row.is_active === 'true'
+      };
+
+      try {
+        await createAccess(accessData);
+        count++;
+      } catch (error: any) {
+        if (!error.message?.includes('unique constraint')) {
+          console.error(`Error creating access ${row.user_id}:`, error.message);
         }
-      })
-      .on('error', reject);
-  });
+      }    
+    }
+    
+    console.log(`✅ ${count} accesses processed from CSV`);
+
+  } catch (error) {
+    console.error("Failed to run access seed:"+ error);
+  }
 };

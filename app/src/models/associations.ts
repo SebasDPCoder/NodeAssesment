@@ -32,11 +32,11 @@ import WarehouseProduct from "./warehouse_product.model";
  */
 export const applyAssociations = () => {
   
-  Role.hasMany(Access, { foreignKey: "role_id", as: "roleAccesses" });
-  Access.belongsTo(Role, { foreignKey: "role_id", as: "accessRole" });
+  Role.hasMany(Access, { foreignKey: "role_id", as: "accesses" });
+  Access.belongsTo(Role, { foreignKey: "role_id", as: "role" });
 
-  Access.hasOne(User, { foreignKey: "access_id", as: "accessUser" });
-  User.belongsTo(Access, { foreignKey: "access_id", as: "userAccess" });
+  User.hasOne(Access, { foreignKey: "user_id", as: "access" });
+  Access.belongsTo(User, { foreignKey: "user_id", as: "user" });
 
   Address.hasMany(Customer, { foreignKey: "address", as: "addressCustomers" });
   Customer.belongsTo(Address, { foreignKey: "address", as: "customerAddress" });

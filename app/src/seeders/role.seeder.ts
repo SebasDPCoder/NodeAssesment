@@ -1,11 +1,9 @@
-// app/src/seeders/02-role.seeder.ts
-
 /**
  * Role Seeder
  * -----------------
  * This file contains the seeder for the Role entity.
  * 
- * It contains:
+ * It contains
  * - Initial role data for the application.
  * - System roles for access control.
  * - Logic to prevent duplicate entries.
@@ -24,28 +22,36 @@ import path from 'path';
  * Creates basic system roles if they don't already exist.
  * Prevents duplicate entries by checking existing records.
  */
+
 export const seedRoles = async (): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    const csvPath = path.join(__dirname, '../data/roles.csv');
-    let count = 0;
+  try {
+    const csvPath = path.join(__dirname, "../data/roles.csv");
+    const rows: any[] = [];
     
-    fs.createReadStream(csvPath)
+    // 1️⃣ Primero leer el CSV completo
+    await new Promise<void>((resolve, reject) => {
+      fs.createReadStream(csvPath)
       .pipe(csv())
-      .on('data', async (row) => {
-        const existing = await Role.findOne({ where: { name: row.name } });
-        if (!existing) {
-          await Role.create({
-            name: row.name,
-            is_active: row.is_active === 'true'
-          });
-          count++;
-          console.log(`✓ Role created: ${row.name}`);
-        }
-      })
-      .on('end', () => {
-        console.log(`✅ ${count} roles processed from CSV`);
-        resolve();
-      })
-      .on('error', reject);
-  });
-};
+      .on("data", (row) => rows.push(row))
+      .on("end", resolve)
+      .on("error", reject);
+    });
+    
+    // 2️⃣ Luego procesar los datos secuencialmente
+    let count = 0;
+    for (const row of rows) {
+      const existing = await Role.findOne({ where: { name: row.name } });
+      if (!existing) {
+        await Role.create({
+          name: row.name,
+          is_active: row.is_active === "true",
+        });
+        count++;
+      }
+    }
+    
+    console.log(`✅ ${count} roles processed from CSV`);
+  } catch (error) {
+    console.error("Failed to run Role seed:"+ error);
+  }
+  };

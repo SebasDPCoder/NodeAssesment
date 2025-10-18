@@ -7,9 +7,7 @@
 import express from "express";
 import authRoutes from "./routes/auth.routes";
 import customerRoutes from "./routes/customer.routes"
-import orderStatusRoutes from "./routes/order_status.routes";
 import roleRoutes from "./routes/role.routes";
-import addressRoutes from "./routes/address.routes";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger";
 import { productRoutes } from "./routes";
@@ -21,8 +19,8 @@ app.use(express.json());
 // Router
 app.use("/api/auth", authRoutes);
 app.use("/api/customers", customerRoutes);
-app.use("/product", productRoutes);
-
+app.use("/api/products", productRoutes);
+app.use("/api/role", roleRoutes)
 
 
 // Swagger

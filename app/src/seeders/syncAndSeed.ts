@@ -1,8 +1,5 @@
-// app/src/scripts/syncAndSeed.ts
-
 import sequelize from "../config/database";
-import { applyAssociations } from "../models/associations";
-import { runAllSeeders } from "../seeders";
+import { runAllSeeders } from ".";
 
 const syncAndSeed = async () => {
   try {
@@ -11,7 +8,6 @@ const syncAndSeed = async () => {
     console.log("✅ Database connection established");
 
     console.log("🔗 Applying model associations...");
-    applyAssociations();
     console.log("✅ Associations applied");
 
     console.log("🗄️ Synchronizing database schema...");

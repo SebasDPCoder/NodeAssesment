@@ -1,5 +1,3 @@
-// app/src/seeders/04-orderStatus.seeder.ts
-
 /**
  * Order Status Seeder
  * -----------------
@@ -19,33 +17,45 @@ import csv from 'csv-parser';
 import path from 'path';
 
 /**
- * Seeds the order status table with initial workflow statuses.
+ * Seeds the `order_status` table with initial workflow statuses.
  * 
- * Creates basic order statuses if they don't already exist.
- * Prevents duplicate entries by checking existing records.
+ * Loads status data from a CSV file and creates records if they don't already exist.
+ * Prevents duplicates and handles errors gracefully.
  */
 export const seedOrderStatus = async (): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    const csvPath = path.join(__dirname, '../data/order_status.csv');
+  try {
+    const csvPath = path.join(__dirname, "../data/order_status.csv");
+    const rows: any[] = [];
+
+    // Load CSV data
+    await new Promise<void>((resolve, reject) => {
+      fs.createReadStream(csvPath)
+        .pipe(csv())
+        .on("data", (row) => rows.push(row))
+        .on("end", resolve)
+        .on("error", reject);
+    });
+
     let count = 0;
-    
-    fs.createReadStream(csvPath)
-      .pipe(csv())
-      .on('data', async (row) => {
-        const existing = await OrderStatus.findOne({ where: { name: row.name } });
-        if (!existing) {
-          await OrderStatus.create({ 
+
+    // Process each row
+    for (const row of rows) {
+      const existing = await OrderStatus.findOne({ where: { name: row.name } });
+
+      if (!existing) {
+        try {
+          await OrderStatus.create({
             name: row.name,
-            is_active: row.is_active === 'true'
+            is_active: row.is_active === "true",
           });
           count++;
-          console.log(`✓ Order Status created: ${row.name}`);
+        } catch (error: any) {
+          console.error(`Error creating order status "${row.name}":`, error.message);
         }
-      })
-      .on('end', () => {
-        console.log(`✅ ${count} order statuses processed from CSV`);
-        resolve();
-      })
-      .on('error', reject);
-  });
+      }
+    }
+    console.log(`✅ ${count} order statuses processed from CSV`);
+  } catch (error) {
+    console.error("❌ Failed to run order status seed:", error);
+  }
 };

@@ -2,18 +2,18 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
 
 export interface UserAttributes {
-    id_user: number,
-    access_id: number,
-    full_name: string,
-    email: string,
-    is_active: boolean,
+    id_user: number;
+    document: string;
+    full_name: string;
+    email: string;
+    is_active: boolean;
 }
 
 type UserCreationAttributes = Optional<UserAttributes, "id_user">;
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes{
     id_user!: number;
-    access_id!: number;
+    document!: string;
     full_name!: string;
     email!: string;
     is_active!: boolean;
@@ -26,8 +26,8 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    access_id: {
-      type: DataTypes.INTEGER,
+    document: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     full_name: {

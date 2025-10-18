@@ -6,6 +6,7 @@ import {
   UpdateUserDTO,
 } from "../dto/user.dto";
 
+
 export const getUsers = async (): Promise<UserDTO[]> => {
   return await User.findAll({ where: { is_active: true } });
 };
@@ -16,22 +17,42 @@ export const getUserById = async (id: number): Promise<UserDTO | null> => {
 
 export const createUserWithAccess = async (registerData: RegisterDto, hashedPassword: string) => {
     const roleId = (registerData as any).role_id || 2;
+    
+    const user = await User.create({
+      document: registerData.document,
+      full_name: registerData.full_name,
+      email: registerData.email,
+      is_active: true
+    });
+
     const access = await Access.create({
-        document: registerData.document,
+        user_id: user.id_user,
         password: hashedPassword,
         role_id: roleId,
         is_active: true
     });
     
     const accessWithRole = await Access.findByPk(access.id_access, { include: [ { model: Role, as: "role" } ] });
-    const user = await User.create({
-        access_id: access.id_access,
-        full_name: registerData.full_name,
-        email: registerData.email,
-        is_active: true
-    });
 
     return {user:user, access:accessWithRole}
+};
+
+export const findByDocument = async (document: string) => {
+    return await User.findOne({
+    where: { document },
+    include: [
+      {
+        model: Access,
+        as: "access",
+        include: [
+          {
+            model: Role,
+            as: "role"
+          }
+        ]
+      }
+    ]
+  });
 };
 
 export const getUserWithRoleById = async (id_user: number) => {

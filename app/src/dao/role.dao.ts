@@ -5,6 +5,7 @@ import {
   UpdateRoleDTO,
 } from "../dto/role.dto";
 
+
 export const getRoles = async (): Promise<RoleDTO[]> => {
   return await Role.findAll({ where: { is_active: true } });
 };
@@ -17,10 +18,7 @@ export const createRole = async (data: CreateRoleDTO): Promise<RoleDTO> => {
   return await Role.create(data);
 };
 
-export const updateRole = async (
-  id: number,
-  data: UpdateRoleDTO
-): Promise<[number, RoleDTO[]]> => {
+export const updateRole = async (id: number, data: UpdateRoleDTO): Promise<[number, RoleDTO[]]> => {
   return await Role.update(data, { where: { id_role: id }, returning: true });
 };
 

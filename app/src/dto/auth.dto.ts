@@ -10,12 +10,12 @@
  */
 
 /**
- * Data Transfer Object for seller registration.
+ * Data Transfer Object for user registration.
  *
  * @property {string} document - Unique document for login.
- * @property {string} password - Seller password (will be encrypted).
- * @property {string} fullname - Full name of the seller.
- * @property {string} email - Unique email address of the seller.
+ * @property {string} password - User password (will be encrypted).
+ * @property {string} full_name - Full name of the user.
+ * @property {string} email - Unique email address of the user.
  */
 
 export interface RegisterDto {
@@ -41,7 +41,7 @@ export interface LoginDto {
  * Data Transfer Object for authentication response.
  *
  * @property {string} token - JWT token for authenticated requests.
- * @property {object} seller - Seller information without sensitive data.
+ * @property {object} user - user information without sensitive data.
  * @property {string} message - Success message.
  *
  */
@@ -52,7 +52,7 @@ export interface AuthResponseDto {
   user: {
     id_user: number;
     document: string;
-    fullname: string;
+    full_name: string;
     email: string;
     id_role: number;
   };
@@ -73,10 +73,7 @@ export interface UserProfileDto {
   id_user: number;
   access_id: number;
   full_name: string;
-  phone?: string;
   email: string;
-  birth_date: string;
-  gender_id: number;
   role: {
     id_role: number;
     name: string;

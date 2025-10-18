@@ -37,11 +37,8 @@ const router = Router();
  *             $ref: '#/components/schemas/CreateCustomerDto'
  *           example:
  *             address_id: 1
- *             gender_id: 1
- *             fullname: "David Martinez"
+ *             full_name: "David Martinez"
  *             email: "david@example.com"
- *             phone: "+573001112233"
- *             birth_date: "1995-05-20"
  *     responses:
  *       201:
  *         description: Customer created successfully
@@ -53,11 +50,8 @@ const router = Router();
  *               data:
  *                 id_customer: 1
  *                 address_id: 1
- *                 gender_id: 1
- *                 fullname: "David Martinez"
+ *                 full_name: "David Martinez"
  *                 email: "david@example.com"
- *                 phone: "+573001112233"
- *                 birth_date: "1995-05-20T00:00:00.000Z"
  *                 active: true
  *       400:
  *         description: Validation error
@@ -84,7 +78,7 @@ const router = Router();
  *               message: "Internal server error during creation"
  */
 
-router.post("/", authMiddleware(),requireRoleByName('Admin','Analyst'),createCustomer);
+router.post("/", authMiddleware(),requireRoleByName('Admin'),createCustomer);
 
 // --- GET all ---
 /**

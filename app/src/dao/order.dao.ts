@@ -5,7 +5,7 @@ import {
   UpdateOrderDTO
 } from "../dto/order.dto";
 
-// ORDER DAO
+
 export const getOrders = async (): Promise<OrderDTO[]> => {
   return await Order.findAll({ where: { is_active: true } });
 };
@@ -18,10 +18,7 @@ export const createOrder = async (data: CreateOrderDTO): Promise<OrderDTO> => {
   return await Order.create(data);
 };
 
-export const updateOrder = async (
-  id: number,
-  data: UpdateOrderDTO
-): Promise<[number, OrderDTO[]]> => {
+export const updateOrder = async (id: number, data: UpdateOrderDTO): Promise<[number, OrderDTO[]]> => {
   return await Order.update(data, { where: { id_order: id }, returning: true });
 };
 
